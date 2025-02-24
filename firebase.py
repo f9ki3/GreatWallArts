@@ -9,7 +9,7 @@ firebase_admin.initialize_app(cred, {
 })
 
 # Load JSON file
-with open("sales.json", "r") as file:
+with open("static/json/sales.json", "r") as file:
     items = json.load(file)
 
 # Reference to "items" collection in Firebase

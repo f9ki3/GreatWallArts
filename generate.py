@@ -3,7 +3,7 @@ import random
 from datetime import datetime, timedelta
 
 # Load the products data
-file_path = "products.json"
+file_path = "static/json/products.json"
 with open(file_path, "r") as file:
     products = json.load(file)
 
@@ -46,7 +46,7 @@ while start_date <= end_date:
     start_date += timedelta(days=1)
 
 # Save the updated sales data to a JSON file
-output_path = "sales_results.json"
+output_path = "static/generated/generated_results.json"
 with open(output_path, "w") as outfile:
     json.dump(sales_data, outfile, indent=2)
 

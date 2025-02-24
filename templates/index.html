@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login</title>
+    {% include 'components/header.html'%}
+  </head>
+  <body>
+    <div class="container text-center">
+      <div class="row mt-5">
+        <div class="col-12 col-md-4"></div>
+        <div class="col-12 col-md-4">
+          <img
+            src="{{ url_for('static', filename='img/gwoa_logo.png') }}"
+            alt="Logo"
+            class="img-fluid mx-auto d-block"
+            style="max-width: 150px; height: auto"
+          />
+
+          <h3 class="fw-bolder mt-3 mb-3">Welcome to Finance</h3>
+
+          <div class="form-floating mb-2">
+            <input
+              type="email"
+              class="form-control form-control-sm rounded-4 small-input"
+              id="floatingEmail"
+              placeholder="Email"
+            />
+            <label for="floatingEmail" class="small-label">Email</label>
+          </div>
+
+          <div class="form-floating">
+            <input
+              type="password"
+              class="form-control form-control-sm rounded-4 small-input"
+              id="floatingPassword"
+              placeholder="Password"
+            />
+            <label for="floatingPassword" class="small-label">Password</label>
+          </div>
+
+          <button
+            style="
+              background-color: #fad709;
+              border: 1px solid #fad709;
+              color: black;
+            "
+            class="mt-3 btn w-100 rounded-4 btn-lg"
+          >
+            Login
+          </button>
+          <div class="d-flex mt-5 justify-content-evenly">
+            <a
+              class="btn text-muted border"
+              href="https://web.facebook.com/@greatwallarts/?_rdc=1&_rdr"
+              target="_blank"
+            >
+              <i class="bi bi-facebook"></i> Facebook
+            </a>
+            <a
+              class="btn text-muted border"
+              href="https://www.instagram.com/greatwallarts/"
+              target="_blank"
+            >
+              <i class="bi bi-instagram"></i> Instagram
+            </a>
+            <a
+              class="btn text-muted border"
+              href="https://greatwallartsph.com/"
+              target="_blank"
+            >
+              <i class="bi bi-globe"></i> Website
+            </a>
+          </div>
+
+          <p class="mt-5 text-secondary">
+            Copyright © 2025, GREAT WALL ARTS PH.
+          </p>
+        </div>
+        <div class="col-12 col-md-4"></div>
+      </div>
+    </div>
+
+    {% include 'components/footer.html'%}
+  </body>
+</html>

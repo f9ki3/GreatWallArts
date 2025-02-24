@@ -1,0 +1,689 @@
+[
+  {
+    "timestamp": "2024-12-01 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "AAMANDA 3 (VACUUM FLASK TUMBLER)",
+        "regular_price": 899.0,
+        "sale_price": 599.0
+      }
+    ],
+    "total_sum": 599.0,
+    "earnings": 300.0
+  },
+  {
+    "timestamp": "2024-12-02 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "HEBRON",
+        "regular_price": 2000.0,
+        "sale_price": 1400.0
+      },
+      {
+        "product_name": "MATTHEW",
+        "regular_price": 2000.0,
+        "sale_price": 1200.0
+      },
+      {
+        "product_name": "SHINAR",
+        "regular_price": 350.0,
+        "sale_price": 250.0
+      }
+    ],
+    "total_sum": 2850.0,
+    "earnings": 1500.0
+  },
+  {
+    "timestamp": "2024-12-03 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "JORDAN BLACK HANDLE 550ML",
+        "regular_price": 800.0,
+        "sale_price": 599.0
+      },
+      {
+        "product_name": "FURNITURE- 50 SQUARE SIDE/ COFFEE TABLE",
+        "regular_price": 7000.0,
+        "sale_price": 5000.0
+      },
+      {
+        "product_name": "ASHERS'S COFFEE GIFT SET A",
+        "regular_price": 1500.0,
+        "sale_price": 1200.0
+      },
+      {
+        "product_name": "SARAH (TOTEBAG BLACK)",
+        "regular_price": 250.0,
+        "sale_price": 199.0
+      },
+      {
+        "product_name": "APRIL (WATERPROOF RAINCOAT)",
+        "regular_price": 499.0,
+        "sale_price": 450.0
+      }
+    ],
+    "total_sum": 7448.0,
+    "earnings": 2601.0
+  },
+  {
+    "timestamp": "2024-12-04 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "RUSSE (AWEI PREMIUM ELECTRONICS GIFT SET 1)",
+        "regular_price": 3500.0,
+        "sale_price": 3000.0
+      },
+      {
+        "product_name": "ALODIA 3 (POWER BANK AND MOBILE STAND SET)",
+        "regular_price": 799.0,
+        "sale_price": 750.0
+      },
+      {
+        "product_name": "FLORA RUSSE RED and WHITE",
+        "regular_price": 2700.0,
+        "sale_price": 2500.0
+      }
+    ],
+    "total_sum": 6250.0,
+    "earnings": 749.0
+  },
+  {
+    "timestamp": "2024-12-05 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "ALODIA 4 (PINK GIFT SET)",
+        "regular_price": 799.0,
+        "sale_price": 750.0
+      },
+      {
+        "product_name": "CHANNAH",
+        "regular_price": 500.0,
+        "sale_price": 399.0
+      },
+      {
+        "product_name": "LABAN (LADLE)",
+        "regular_price": 1000.0,
+        "sale_price": 699.0
+      },
+      {
+        "product_name": "FURNITURE- BAR TABLE with 4 CHAIRS set (BLACK)",
+        "regular_price": 25000.0,
+        "sale_price": 22000.0
+      },
+      {
+        "product_name": "MOSES Cheese Board with Liquor Set",
+        "regular_price": 2200.0,
+        "sale_price": 1999.0
+      }
+    ],
+    "total_sum": 25847.0,
+    "earnings": 3652.0
+  },
+  {
+    "timestamp": "2024-12-06 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "GOSHEN (Blue Coffee Gift Set)",
+        "regular_price": 1200.0,
+        "sale_price": 999.0
+      }
+    ],
+    "total_sum": 999.0,
+    "earnings": 201.0
+  },
+  {
+    "timestamp": "2024-12-07 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "JOCHEBED (CHEESE BOARD with CHEESE KNIVES",
+        "regular_price": 2000.0,
+        "sale_price": 1800.0
+      },
+      {
+        "product_name": "BEER-SHEBA (12in rd)",
+        "regular_price": 1499.0,
+        "sale_price": 999.0
+      },
+      {
+        "product_name": "APRIL (CHEESE BOARD WITH 3 KNIVES)",
+        "regular_price": 1200.0,
+        "sale_price": 1150.0
+      },
+      {
+        "product_name": "NOAH",
+        "regular_price": 300.0,
+        "sale_price": 299.0
+      },
+      {
+        "product_name": "RUSSE (BRANDED POWERBANK + MOBILE STAND SET)",
+        "regular_price": 1099.0,
+        "sale_price": 999.0
+      }
+    ],
+    "total_sum": 5247.0,
+    "earnings": 851.0
+  },
+  {
+    "timestamp": "2024-12-08 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "ABRAHAM (BAMBOO POWERBANK)",
+        "regular_price": 999.0,
+        "sale_price": 899.0
+      },
+      {
+        "product_name": "DECAPOLIS (PLATTERS)",
+        "regular_price": 2000.0,
+        "sale_price": 999.0
+      },
+      {
+        "product_name": "GOSHEN (Blue Coffee Gift Set)",
+        "regular_price": 1200.0,
+        "sale_price": 999.0
+      },
+      {
+        "product_name": "FLORA RUSSE CENTERPIECE 10\u201d",
+        "regular_price": 2700.0,
+        "sale_price": 2500.0
+      }
+    ],
+    "total_sum": 5397.0,
+    "earnings": 1502.0
+  },
+  {
+    "timestamp": "2024-12-09 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "BEATRIX 2 (GIFT FAN SET)",
+        "regular_price": 1299.0,
+        "sale_price": 1000.0
+      },
+      {
+        "product_name": "ONO",
+        "regular_price": 300.0,
+        "sale_price": 210.0
+      }
+    ],
+    "total_sum": 1210.0,
+    "earnings": 389.0
+  },
+  {
+    "timestamp": "2024-12-10 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "ASHER'S COFFEE GRINDER SET",
+        "regular_price": 2000.0,
+        "sale_price": 1800.0
+      },
+      {
+        "product_name": "ADAN BALLPEN",
+        "regular_price": 200.0,
+        "sale_price": 99.0
+      }
+    ],
+    "total_sum": 1899.0,
+    "earnings": 301.0
+  },
+  {
+    "timestamp": "2024-12-11 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "MIA (SODA SPOON)",
+        "regular_price": 200.0,
+        "sale_price": 129.0
+      },
+      {
+        "product_name": "ASHER'S COFFEE GRINDER SET",
+        "regular_price": 2000.0,
+        "sale_price": 1800.0
+      },
+      {
+        "product_name": "CANDACE (10x18x1)",
+        "regular_price": 1500.0,
+        "sale_price": 999.0
+      }
+    ],
+    "total_sum": 2928.0,
+    "earnings": 772.0
+  },
+  {
+    "timestamp": "2024-12-12 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "BETHEL (6x14)",
+        "regular_price": 599.0,
+        "sale_price": 350.0
+      },
+      {
+        "product_name": "ELISHA 3 (CHEESEBOARD, KNIVES and WINE SET)",
+        "regular_price": 1500.0,
+        "sale_price": 1299.0
+      },
+      {
+        "product_name": "OPHIR (BAMBOO SUNGLASS with CASE)",
+        "regular_price": 599.0,
+        "sale_price": 589.0
+      },
+      {
+        "product_name": "ABRAHAM (BAMBOO POWERBANK)",
+        "regular_price": 999.0,
+        "sale_price": 899.0
+      },
+      {
+        "product_name": "JORDAN 450",
+        "regular_price": 700.0,
+        "sale_price": 550.0
+      }
+    ],
+    "total_sum": 3687.0,
+    "earnings": 710.0
+  },
+  {
+    "timestamp": "2024-12-13 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "ABRAHAM 2024 PLANNER WITH MAGNETIC LOCK",
+        "regular_price": 500.0,
+        "sale_price": 399.0
+      },
+      {
+        "product_name": "DAVID (GROOMSMEN GIFT SET)",
+        "regular_price": 2000.0,
+        "sale_price": 1500.0
+      }
+    ],
+    "total_sum": 1899.0,
+    "earnings": 601.0
+  },
+  {
+    "timestamp": "2024-12-14 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "ABEDNEGO (COFEEA AND CHESSBOARD SET)",
+        "regular_price": 2000.0,
+        "sale_price": 1500.0
+      },
+      {
+        "product_name": "ENGRAVED SALAD BOWL/ RICE BOWL",
+        "regular_price": 1500.0,
+        "sale_price": 599.0
+      }
+    ],
+    "total_sum": 2099.0,
+    "earnings": 1401.0
+  },
+  {
+    "timestamp": "2024-12-15 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "PRISCA (12X15)",
+        "regular_price": 1999.0,
+        "sale_price": 1200.0
+      },
+      {
+        "product_name": "HEBRON (COFFEE GIFT SET)",
+        "regular_price": 1299.0,
+        "sale_price": 999.0
+      }
+    ],
+    "total_sum": 2199.0,
+    "earnings": 1099.0
+  },
+  {
+    "timestamp": "2024-12-16 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "SHINAR",
+        "regular_price": 350.0,
+        "sale_price": 250.0
+      },
+      {
+        "product_name": "SHADRACH (PORTABLE BLENDER)",
+        "regular_price": 899.0,
+        "sale_price": 799.0
+      },
+      {
+        "product_name": "GOLGOTHA (Baby Pink/Sky Blue Glass Tumbler )",
+        "regular_price": 400.0,
+        "sale_price": 299.0
+      },
+      {
+        "product_name": "MAGDALA (Magic Mug)",
+        "regular_price": 225.0,
+        "sale_price": 220.0
+      }
+    ],
+    "total_sum": 1568.0,
+    "earnings": 306.0
+  },
+  {
+    "timestamp": "2024-12-17 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "AAMBER 3(TRAVEL COFFEE MUG)",
+        "regular_price": 599.0,
+        "sale_price": 499.0
+      },
+      {
+        "product_name": "RUSSE (ORIGINAL BAVIN POWERBANK + MOBILE STAND SET)",
+        "regular_price": 1299.0,
+        "sale_price": 1099.0
+      },
+      {
+        "product_name": "ELISHA (CHEESEBOARD and WINE SET)",
+        "regular_price": 1500.0,
+        "sale_price": 1299.0
+      }
+    ],
+    "total_sum": 2897.0,
+    "earnings": 501.0
+  },
+  {
+    "timestamp": "2024-12-18 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "ELISHA 2 (CHEESEBOARD and WINE SET)",
+        "regular_price": 1299.0,
+        "sale_price": 999.0
+      },
+      {
+        "product_name": "Eve 1 (Blue Powerbank Set)",
+        "regular_price": 1200.0,
+        "sale_price": 999.0
+      },
+      {
+        "product_name": "AAMBER 5 (VACUUM INSULATED BOTTLE)",
+        "regular_price": 999.0,
+        "sale_price": 899.0
+      },
+      {
+        "product_name": "ASHER'S COFFEE GIFT SET C",
+        "regular_price": 2000.0,
+        "sale_price": 1699.0
+      }
+    ],
+    "total_sum": 4596.0,
+    "earnings": 902.0
+  },
+  {
+    "timestamp": "2024-12-19 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "SARAI DIGITAL CLOCK (RECTANGLE)",
+        "regular_price": 700.0,
+        "sale_price": 599.0
+      }
+    ],
+    "total_sum": 599.0,
+    "earnings": 101.0
+  },
+  {
+    "timestamp": "2024-12-20 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "RUSSE (HIGH SPEED HANDHELD SMALL FAN)",
+        "regular_price": 2000.0,
+        "sale_price": 1299.0
+      },
+      {
+        "product_name": "BETHANY (COFFEE GIFT SET)",
+        "regular_price": 899.0,
+        "sale_price": 799.0
+      },
+      {
+        "product_name": "FURNITURE- BAR TABLE with 4 CHAIRS set (BLACK)",
+        "regular_price": 25000.0,
+        "sale_price": 22000.0
+      }
+    ],
+    "total_sum": 24098.0,
+    "earnings": 3801.0
+  },
+  {
+    "timestamp": "2024-12-21 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "Eve 4 (Humidifier set with essential oil)",
+        "regular_price": 999.0,
+        "sale_price": 899.0
+      },
+      {
+        "product_name": "MOSES Cheese Board Set with liquor set 2",
+        "regular_price": 2100.0,
+        "sale_price": 1800.0
+      },
+      {
+        "product_name": "FURNITURE- 3012 CONSOLE TABLE",
+        "regular_price": 10500.0,
+        "sale_price": 9500.0
+      },
+      {
+        "product_name": "JESHANA (Glass Tumbler)",
+        "regular_price": 500.0,
+        "sale_price": 399.0
+      }
+    ],
+    "total_sum": 12598.0,
+    "earnings": 1501.0
+  },
+  {
+    "timestamp": "2024-12-22 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "CANAAN (8x10)",
+        "regular_price": 600.0,
+        "sale_price": 400.0
+      },
+      {
+        "product_name": "FLORA RUSSE RED and WHITE",
+        "regular_price": 2700.0,
+        "sale_price": 2500.0
+      },
+      {
+        "product_name": "ARTHUR (DIGITAL CLOCK AND SCENTED CANDLE GIFT SET)",
+        "regular_price": 950.0,
+        "sale_price": 899.0
+      }
+    ],
+    "total_sum": 3799.0,
+    "earnings": 451.0
+  },
+  {
+    "timestamp": "2024-12-23 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "AAMANDA 2 (VACUUM FLASK TUMBLER)",
+        "regular_price": 899.0,
+        "sale_price": 599.0
+      },
+      {
+        "product_name": "AAMBER 4(VACUUM INSULATED BOTTLE)",
+        "regular_price": 1200.0,
+        "sale_price": 999.0
+      },
+      {
+        "product_name": "GOSHEN (Rustic Coffee Gift Set)",
+        "regular_price": 1200.0,
+        "sale_price": 999.0
+      }
+    ],
+    "total_sum": 2597.0,
+    "earnings": 702.0
+  },
+  {
+    "timestamp": "2024-12-24 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "FLORA BEA ROYAL BLUE",
+        "regular_price": 2700.0,
+        "sale_price": 2500.0
+      },
+      {
+        "product_name": "JOCHEBED AARON (CHEESEBOARD with CHEESE KNIVES",
+        "regular_price": 1500.0,
+        "sale_price": 1200.0
+      },
+      {
+        "product_name": "RUSSE (TEA SET with BAG)",
+        "regular_price": 1500.0,
+        "sale_price": 999.0
+      }
+    ],
+    "total_sum": 4699.0,
+    "earnings": 1001.0
+  },
+  {
+    "timestamp": "2024-12-25 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "MAGDALA (Magic Mug)",
+        "regular_price": 225.0,
+        "sale_price": 220.0
+      },
+      {
+        "product_name": "BEER-SHEBA (12in rd)",
+        "regular_price": 1499.0,
+        "sale_price": 999.0
+      },
+      {
+        "product_name": "DEBORAH(ROUND)",
+        "regular_price": 200.0,
+        "sale_price": 150.0
+      },
+      {
+        "product_name": "KISH BAMBOO (4pc knife set)",
+        "regular_price": 500.0,
+        "sale_price": 399.0
+      }
+    ],
+    "total_sum": 1768.0,
+    "earnings": 656.0
+  },
+  {
+    "timestamp": "2024-12-26 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "JORDAN 350",
+        "regular_price": 600.0,
+        "sale_price": 499.0
+      },
+      {
+        "product_name": "CANAAN (8x10)",
+        "regular_price": 600.0,
+        "sale_price": 400.0
+      }
+    ],
+    "total_sum": 899.0,
+    "earnings": 301.0
+  },
+  {
+    "timestamp": "2024-12-27 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "FURNITURE- BAR TABLE with 4 CHAIRS set (GOLD)",
+        "regular_price": 30000.0,
+        "sale_price": 24000.0
+      }
+    ],
+    "total_sum": 24000.0,
+    "earnings": 6000.0
+  },
+  {
+    "timestamp": "2024-12-28 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "APRIL (AUTOMATIC FOLDING UMBRELLA)",
+        "regular_price": 0,
+        "sale_price": 0
+      },
+      {
+        "product_name": "RUSSE (TEA SET with BAG)",
+        "regular_price": 1500.0,
+        "sale_price": 999.0
+      },
+      {
+        "product_name": "MAGDALA (Magic Mug)",
+        "regular_price": 225.0,
+        "sale_price": 220.0
+      },
+      {
+        "product_name": "JOSEPH Liquor Gift Set (Baileys)",
+        "regular_price": 1800.0,
+        "sale_price": 1399.0
+      }
+    ],
+    "total_sum": 2618.0,
+    "earnings": 907.0
+  },
+  {
+    "timestamp": "2024-12-29 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "RUSSE (LED WIRELESS CHARGING SPEAKER)",
+        "regular_price": 1299.0,
+        "sale_price": 999.0
+      },
+      {
+        "product_name": "ARTHUR (BOMBER JACKET)",
+        "regular_price": 1500.0,
+        "sale_price": 1299.0
+      }
+    ],
+    "total_sum": 2298.0,
+    "earnings": 501.0
+  },
+  {
+    "timestamp": "2024-12-30 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "RUSSE (DESKTOP MINI FAN)",
+        "regular_price": 1500.0,
+        "sale_price": 1200.0
+      },
+      {
+        "product_name": "GUIA 1 (FATHERS TOOL SET)",
+        "regular_price": 1600.0,
+        "sale_price": 1500.0
+      },
+      {
+        "product_name": "GOSHEN (Blue Coffee Gift Set)",
+        "regular_price": 1200.0,
+        "sale_price": 999.0
+      }
+    ],
+    "total_sum": 3699.0,
+    "earnings": 601.0
+  },
+  {
+    "timestamp": "2024-12-31 00:00:00",
+    "cart_items": [
+      {
+        "product_name": "RUSSE (TEA SET with BAG)",
+        "regular_price": 1500.0,
+        "sale_price": 999.0
+      },
+      {
+        "product_name": "MIA (SODA SPOON)",
+        "regular_price": 200.0,
+        "sale_price": 129.0
+      },
+      {
+        "product_name": "RUSSE (BAVIN PREMIUM ELECTRONICS GIFT SET 2)",
+        "regular_price": 3500.0,
+        "sale_price": 3000.0
+      },
+      {
+        "product_name": "FURNITURE-ACACIA LONG DINING TABLE",
+        "regular_price": 95000.0,
+        "sale_price": 75000.0
+      },
+      {
+        "product_name": "MEGIDDO 400 (MUG)",
+        "regular_price": 599.0,
+        "sale_price": 499.0
+      }
+    ],
+    "total_sum": 79627.0,
+    "earnings": 21172.0
+  }
+]

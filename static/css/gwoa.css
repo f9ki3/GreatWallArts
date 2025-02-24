@@ -1,0 +1,11 @@
+/* Make label text smaller */
+.small-label {
+  font-size: 15px;
+  color: gray;
+}
+
+/* Reduce placeholder size */
+.small-input::placeholder {
+  font-size: 15px;
+  color: gray;
+}
