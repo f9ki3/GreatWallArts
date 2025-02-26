@@ -4,6 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Login</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='img/gwoa_logo.png') }}"
+    />
     {% include 'components/header.html'%}
   </head>
   <body>
@@ -30,7 +35,7 @@
             <label for="floatingEmail" class="small-label">Email</label>
           </div>
 
-          <div class="form-floating">
+          <div class="form-floating mt-3">
             <input
               type="password"
               class="form-control form-control-sm rounded-4 small-input"
@@ -41,15 +46,46 @@
           </div>
 
           <button
+            id="btn-login"
+            onclick="login()"
             style="
               background-color: #fad709;
               border: 1px solid #fad709;
               color: black;
+              font-size: 18px;
+              font-weight: bold;
+              padding: 12px;
             "
-            class="mt-3 btn w-100 rounded-4 btn-lg"
+            class="mt-3 btn w-100 rounded-4 btn-lg d-flex align-items-center justify-content-center gap-2"
           >
-            Login
+            <span id="label-login">Login</span>
+            <div
+              id="label-loading"
+              style="display: none"
+              class="spinner-border spinner-border-sm"
+              role="status"
+            >
+              <span class="visually-hidden">Loading...</span>
+            </div>
           </button>
+
+          <div
+            id="error"
+            class="alert rounded-4 mt-3 alert-danger"
+            role="alert"
+            style="display: none"
+          >
+            Invalid credential please try again!
+          </div>
+          <div
+            id="success"
+            class="alert rounded-4 mt-3 alert-success"
+            role="alert"
+            style="display: none"
+          >
+            Successfully login!
+          </div>
+          <p class="mt-5 text-muted">External Links</p>
           <div class="d-flex mt-5 justify-content-evenly">
             <a
               class="btn text-muted border"
@@ -83,5 +119,6 @@
     </div>
 
     {% include 'components/footer.html'%}
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
   </body>
 </html>

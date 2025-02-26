@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='img/gwoa_logo.png') }}"
+    />
+    <title>Dashboard</title>
+    {% include 'components/header.html'%}
+  </head>
+  <body>
+    <div class="d-flex">
+      {% include 'components/navbar.html'%}
+      <div class="w-100">
+        <div class="container p-5">
+          <div class="row align-items-center">
+            <div class="col-md-12 col-12">
+              <h3 class="fw-bolder">Hello, Fykie</h3>
+              <p class="text-muted">
+                Welcome to finance you can track and monitor sales and analytics
+                here.
+              </p>
+            </div>
+            <div class="col-md-6 col-12">
+              <div class="border rounded-4 p-3" style="background-color: azure">
+                <h3 class="fw-bolder">1,556,900.00</h3>
+                <p class="mb-0 text-muted">Sales Revenue</p>
+                <p></p>
+              </div>
+            </div>
+            <div class="col-md-6 col-12">
+              <div class="border rounded-4 p-3">
+                <h3 class="fw-bolder">1,556,900.00</h3>
+                <p class="mb-0 text-muted">Sales Revenue</p>
+                <p></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% include 'components/footer.html'%}
+  </body>
+</html>

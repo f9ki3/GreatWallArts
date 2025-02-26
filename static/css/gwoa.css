@@ -9,3 +9,15 @@
   font-size: 15px;
   color: gray;
 }
+
+.gwa-sidebar {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Hide the sidebar on screens smaller than or equal to 768px */
+@media screen and (max-width: 968px) {
+  .gwa-sidebar {
+    display: none;
+  }
+}
