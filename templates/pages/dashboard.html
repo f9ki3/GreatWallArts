@@ -15,95 +15,112 @@
     <!-- ApexCharts Library -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
   </head>
-  <body>
+  <body class="bg-shadow-white">
     <div class="d-flex">
       {% include 'components/navbar.html' %}
       <div class="w-100">
-        <div class="container p-5">
-          <div class="row align-items-center">
+        {% include 'components/navigation.html' %}
+        <div class="container pt-5">
+          <div class="row g-3 align-items-center">
             <div class="col-md-12 col-12">
-              <h3 class="fw-bolder">Hello, Fykie</h3>
+              <h1 class="fw-bolder">Hello, Fykie</h1>
               <p class="text-muted">
-                Welcome to finance. You can track and monitor sales and
-                analytics here.
+                Welcome to finance. You can track and monitor sales, budget,
+                invoices and analytics here.
               </p>
             </div>
 
             <!-- Monthly Revenue -->
             <div class="col-md-6 col-12">
-              <div class="border rounded-4 p-3" style="background-color: azure">
+              <div class="border rounded-4 p-3 bg-light-white text-muted">
                 <h3 class="fw-bolder">₱1,556,900.00</h3>
-                <p class="mb-0 text-muted">Monthly Revenue</p>
+                <p class="mb-0">Monthly Revenue</p>
               </div>
             </div>
 
             <!-- Yearly Revenue -->
             <div class="col-md-6 col-12">
-              <div class="border rounded-4 p-3">
+              <div class="border rounded-4 p-3 bg-light-white text-muted">
                 <h3 class="fw-bolder">₱18,682,800.00</h3>
                 <p class="mb-0 text-muted">2024 Revenue</p>
               </div>
             </div>
-          </div>
 
-          <!-- Sales Chart -->
-          <div class="row mt-5">
             <div class="col-md-12">
-              <div class="border rounded-4 p-4">
+              <div class="border rounded-4 p-4 bg-light-white text-muted">
                 <h4 class="fw-bold">Monthly Sales Overview</h4>
                 <div id="salesChart"></div>
               </div>
             </div>
-          </div>
 
-          <!-- Budget Planning Approval -->
-          <div class="row mt-5">
+            <!-- Budget Planning Approval -->
+
             <div class="col-md-12">
-              <div class="border rounded-4 p-4">
+              <div class="border rounded-4 p-4 text-muted">
                 <h4 class="fw-bold">Budget Planning Approval</h4>
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>Department</th>
-                      <th>Requested Budget</th>
-                      <th>Status</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Admin</td>
-                      <td>₱500,000</td>
-                      <td>
-                        <span class="badge bg-warning text-dark">Pending</span>
-                      </td>
-                      <td>
-                        <button class="btn btn-sm btn-success">Approve</button>
-                        <button class="btn btn-sm btn-danger">Reject</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>HR</td>
-                      <td>₱250,000</td>
-                      <td><span class="badge bg-success">Approved</span></td>
-                      <td>
-                        <button class="btn btn-sm btn-secondary" disabled>
-                          Approved
-                        </button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Logistics</td>
-                      <td>₱750,000</td>
-                      <td><span class="badge bg-danger">Rejected</span></td>
-                      <td>
-                        <button class="btn btn-sm btn-secondary" disabled>
-                          Rejected
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th><p>Department</p></th>
+                        <th><p>Requested Budget</p></th>
+                        <th><p>Status</p></th>
+                        <th><p>Action</p></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><p>Admin</p></td>
+                        <td><p>₱500,000</p></td>
+                        <td>
+                          <p>
+                            <span class="badge bg-warning text-dark"
+                              >Pending</span
+                            >
+                          </p>
+                        </td>
+                        <td>
+                          <p>
+                            <button class="btn btn-sm btn-success">
+                              Approve
+                            </button>
+                            <button class="btn btn-sm btn-danger">
+                              Reject
+                            </button>
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><p>HR</p></td>
+                        <td><p>₱250,000</p></td>
+                        <td>
+                          <p><span class="badge bg-success">Approved</span></p>
+                        </td>
+                        <td>
+                          <p>
+                            <button class="btn btn-sm btn-secondary" disabled>
+                              Approved
+                            </button>
+                          </p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><p>Logistics</p></td>
+                        <td><p>₱750,000</p></td>
+                        <td>
+                          <p><span class="badge bg-danger">Rejected</span></p>
+                        </td>
+                        <td>
+                          <p>
+                            <button class="btn btn-sm btn-secondary" disabled>
+                              Rejected
+                            </button>
+                          </p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
@@ -145,9 +162,6 @@
               "Nov",
               "Dec",
             ],
-          },
-          title: {
-            text: "Monthly Sales Report (2024)",
           },
         };
 

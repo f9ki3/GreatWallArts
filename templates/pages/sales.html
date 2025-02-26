@@ -12,7 +12,7 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/sales_table.css') }}"
     />
-    <title>Dashboard</title>
+    <title>Sales</title>
     {% include 'components/header.html' %}
     <style>
       .sortable:hover {
@@ -45,10 +45,11 @@
     <div class="d-flex">
       {% include 'components/navbar.html' %}
       <div class="w-100">
-        <div class="container p-5">
+        {% include 'components/navigation.html' %}
+        <div class="container mt-5">
           <div class="row align-items-center">
             <div class="col-md-12 col-12">
-              <h3 class="fw-bolder">Sales Transactions</h3>
+              <h1 class="fw-bolder">Sales Transactions</h1>
               <p class="text-muted">You can view and find recent sales here.</p>
             </div>
           </div>
@@ -70,11 +71,13 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th class="sortable" data-sort="total_sum">Total Sum</th>
-                  <th class="sortable" data-sort="earnings">Earnings</th>
+                  <th><p>ID</p></th>
+                  <th class="sortable" data-sort="total_sum">
+                    <p>Total Sum</p>
+                  </th>
+                  <th class="sortable" data-sort="earnings"><p>Earnings</p></th>
                   <th class="sortable text-end" data-sort="timestamp">
-                    Timestamp
+                    <p>Timestamp</p>
                   </th>
                 </tr>
               </thead>
@@ -157,11 +160,12 @@
               }
               $("#sales-table-body").html(`
               <tr>
-                <td>${sale.id}</td>
-                <td>${sale.total_sum}</td>
-                <td>${sale.earnings}</td>
-                <td>${sale.timestamp}</td>
+                <td><p>${sale.id}</p></td>
+                <td><p>${sale.total_sum}</p></td>
+                <td><p>${sale.earnings}</p></td>
+                <td class="text-end"><p>${sale.timestamp}</p></td>
               </tr>
+
             `);
             } else {
               let sales = response.sales;
@@ -179,11 +183,12 @@
                 .map(
                   (sale) => `
               <tr>
-                <td>${sale.id}</td>
-                <td>${sale.total_sum}</td>
-                <td>${sale.earnings}</td>
-                <td class="text-end">${sale.timestamp}</td>
+                <td><p>${sale.id}</p></td>
+                <td><p>${sale.total_sum}</p></td>
+                <td><p>${sale.earnings}</p></td>
+                <td class="text-end"><p>${sale.timestamp}</p></td>
               </tr>
+
             `
                 )
                 .join("");

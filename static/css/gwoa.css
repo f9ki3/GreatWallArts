@@ -15,9 +15,34 @@
   flex-direction: column;
 }
 
+.navigation {
+  background-color: #ffffff;
+  display: none;
+}
+
+.bg-light-white {
+  background-color: white;
+}
+
+.bg-accent-green {
+  color: green;
+}
 /* Hide the sidebar on screens smaller than or equal to 768px */
-@media screen and (max-width: 968px) {
+@media screen and (max-width: 1000px) {
   .gwa-sidebar {
     display: none;
+  }
+  p {
+    font-size: 12px;
+  }
+  .navigation {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1440px) {
+  .container {
+    zoom: 0.8 !important;
   }
 }

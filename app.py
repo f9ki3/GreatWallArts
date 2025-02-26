@@ -4,6 +4,7 @@ import firebase_admin
 from firebase_admin import credentials, db
 
 # Initialize Firebase
+# cred = credentials.Certificate("account_key.json")
 cred = credentials.Certificate("/etc/secrets/account_key.json")
 firebase_admin.initialize_app(cred, {
     "databaseURL": "https://finance-department-3f0ba-default-rtdb.asia-southeast1.firebasedatabase.app/"
@@ -23,6 +24,17 @@ def sales():
     if 'user' not in session:  # Check if user is logged in
         return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
     return render_template('pages/sales.html')  # Show dashboard if logged in
+
+@app.route('/publish_job')
+def publish_job():
+    if 'user' not in session:  # Check if user is logged in
+        return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
+    return render_template('pages/publish_job.html')  # Show dashboard if logged in
+
+
+@app.route('/documentation')
+def documentation():
+    return render_template('pages/documentation.html')  # Show dashboard if logged in
 
 @app.route('/dashboard')
 def dashboard():

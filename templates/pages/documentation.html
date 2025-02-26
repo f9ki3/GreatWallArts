@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>API Documentation</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='img/gwoa_logo.png') }}"
+    />
+    {% include 'components/header.html'%}
+  </head>
+  <body>
+    <div
+      class="w-100"
+      style="position: fixed; background-color: #ffd906; height: 10px"
+    ></div>
+    <div class="container">
+      <div class="row pt-5">
+        <!-- Sidebar Section -->
+        <div class="col-12 col-md-3 sticky-top">
+          <div>
+            <img
+              class="img-fluid me-2"
+              src="{{ url_for('static', filename='img/gwoa_logo.png') }}"
+              alt="Logo"
+              style="width: 100px"
+            />
+          </div>
+
+          <h3 class="fw-bolder mt-4">
+            <a href="#introduction" class="text-muted text-decoration-none"
+              >Introduction</a
+            >
+          </h3>
+          <p>
+            <a href="#getting-started" class="text-muted text-decoration-none"
+              >Getting Started</a
+            >
+          </p>
+          <p>
+            <a href="#api-endpoints" class="text-muted text-decoration-none"
+              >API Endpoints</a
+            >
+          </p>
+
+          <hr />
+          <h3 class="fw-bolder mt-4">
+            <a href="#features" class="text-muted text-decoration-none"
+              >Features</a
+            >
+          </h3>
+
+          <!-- Collapse for Budget Planning -->
+          <button
+            class="btn text-muted text-decoration-none d-block text-start fw-bold"
+            data-bs-toggle="collapse"
+            data-bs-target="#budgetPlanning"
+          >
+            ▼ Budget Planning
+          </button>
+          <div id="budgetPlanning" class="collapse ps-3">
+            <p>
+              -
+              <a href="#create-budgets" class="text-muted text-decoration-none"
+                >Create Budgets</a
+              >
+            </p>
+            <p>
+              -
+              <a href="#view-reports" class="text-muted text-decoration-none"
+                >View Reports</a
+              >
+            </p>
+          </div>
+
+          <!-- Collapse for Sales Invoices -->
+          <button
+            class="btn text-muted text-decoration-none d-block text-start fw-bold mt-2"
+            data-bs-toggle="collapse"
+            data-bs-target="#salesInvoices"
+          >
+            ▼ Sales Invoices
+          </button>
+          <div id="salesInvoices" class="collapse ps-3">
+            <p>
+              -
+              <a
+                href="#generate-invoices"
+                class="text-muted text-decoration-none"
+                >Generate Invoices</a
+              >
+            </p>
+            <p>
+              -
+              <a href="#manage-payments" class="text-muted text-decoration-none"
+                >Manage Payments</a
+              >
+            </p>
+          </div>
+
+          <hr />
+          <h3 class="fw-bolder">
+            <a href="#more-info" class="text-muted text-decoration-none"
+              >More Info</a
+            >
+          </h3>
+        </div>
+
+        <div class="col-12 col-md-9 text-muted">
+          <div class="mt-4 d-flex">
+            <h5 class="me-5" style="font-size: 20px">
+              <i class="bi bi-file-earmark-text"></i> Documentation 1.5.x
+            </h5>
+            <h5 class="me-5" style="font-size: 20px">
+              <i class="bi bi-link-45deg"></i>
+              <a
+                href="https://greatwallarts.onrender.com/"
+                class="text-secondary"
+                target="_blank"
+                >https://greatwallarts.onrender.com</a
+              >
+            </h5>
+          </div>
+
+          <div class="mt-5">
+            <h1 id="introduction" class="fw-bolder">Introduction</h1>
+            <p>
+              Welcome to the FINANCE API documentation. This documentation
+              provides detailed information on how to integrate with our API.
+            </p>
+          </div>
+
+          <div class="mt-5">
+            <h1 id="getting-started" class="fw-bolder">Getting Started</h1>
+            <p>
+              Learn how to authenticate, make requests, and handle responses.
+            </p>
+          </div>
+
+          <div class="mt-5">
+            <h1 id="api-endpoints" class="fw-bolder">API Endpoints</h1>
+            <p>
+              Explore the available API endpoints and their functionalities.
+            </p>
+          </div>
+
+          <div class="mt-5">
+            <h1 id="features" class="fw-bolder">Features</h1>
+            <h3 id="create-budgets">Create Budgets</h3>
+            <p>Details on how to create and manage budgets through the API.</p>
+
+            <h3 id="view-reports">View Reports</h3>
+            <p>Instructions on retrieving and analyzing financial reports.</p>
+
+            <h3 id="generate-invoices">Generate Invoices</h3>
+            <p>Guide on generating invoices programmatically.</p>
+
+            <h3 id="manage-payments">Manage Payments</h3>
+            <p>Steps to process and track payments via the API.</p>
+          </div>
+
+          <div class="mt-5">
+            <h1 id="more-info" class="fw-bolder">More Info</h1>
+            <p>Find additional details and support information here.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% include 'components/footer.html'%}
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+  </body>
+</html>
