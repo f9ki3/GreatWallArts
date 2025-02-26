@@ -2,22 +2,9 @@ from flask import Flask, render_template, request, jsonify, session, redirect, u
 import requests
 import firebase_admin
 from firebase_admin import credentials, db
-import os
-import json
 
-
-# cred = credentials.Certificate("account_key.json")
-# Get the credentials from environment variable
-firebase_credentials = os.getenv("FIREBASE_CREDENTIALS")
-
-if firebase_credentials:
-    # Parse JSON string from environment variable
-    cred_dict = json.loads(firebase_credentials)
-    cred = credentials.Certificate(cred_dict)
-else:
-    raise ValueError("FIREBASE_CREDENTIALS environment variable is not set or invalid.")
-
-# Initialize Firebase Admin SDK
+# Initialize Firebase
+cred = credentials.Certificate("/etc/secrets/account_key.json")
 firebase_admin.initialize_app(cred, {
     "databaseURL": "https://finance-department-3f0ba-default-rtdb.asia-southeast1.firebasedatabase.app/"
 })
@@ -80,7 +67,6 @@ def login():
 # GET /api/get-sales?sort_by=total_sum&order=asc | total_sum, earnings, or timestamp
 # GET /api/get-sales?page=2&per_page=3 | 
 # GET /api/get-sales?id=-OJqeBQaJZ1aAeeseDeR
-
 @app.route('/api/get-sales', methods=['GET'])
 def get_sales():
     # Reference to the "sales" collection
