@@ -3,12 +3,6 @@ import requests
 import firebase_admin
 from firebase_admin import credentials, db
 import os
-
-from flask import Flask, render_template, request, jsonify, session, redirect, url_for
-import requests
-import firebase_admin
-from firebase_admin import credentials, db
-import os
 import json
 
 
