@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='img/gwoa_logo.png') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/sales_table.css') }}"
+    />
+    <title>Dashboard</title>
+    {% include 'components/header.html' %}
+    <style>
+      .sortable:hover {
+        cursor: pointer;
+        text-decoration: underline;
+      }
+      /* Align per-page selector and pagination */
+      .pagination-controls {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+      .per-page-select {
+        margin-bottom: 10px;
+      }
+      @media (max-width: 576px) {
+        .pagination-controls {
+          flex-direction: column;
+          align-items: center;
+        }
+        .per-page-select {
+          width: 100%;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="d-flex">
+      {% include 'components/navbar.html' %}
+      <div class="w-100">
+        <div class="container p-5">
+          <div class="row align-items-center">
+            <div class="col-md-12 col-12">
+              <h3 class="fw-bolder">Sales Transactions</h3>
+              <p class="text-muted">You can view and find recent sales here.</p>
+            </div>
+          </div>
+
+          <!-- Search Bar -->
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <input
+                type="text"
+                id="search-input"
+                class="form-control"
+                placeholder="Search by ID..."
+              />
+            </div>
+          </div>
+
+          <!-- Sales Table -->
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th class="sortable" data-sort="total_sum">Total Sum</th>
+                  <th class="sortable" data-sort="earnings">Earnings</th>
+                  <th class="sortable text-end" data-sort="timestamp">
+                    Timestamp
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="sales-table-body">
+                <tr>
+                  <td colspan="4" class="text-center">Loading data...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Per Page Selector and Pagination -->
+          <div class="pagination-controls">
+            <!-- Per Page Selector -->
+            <div class="per-page-select">
+              <label for="per-page" class="form-label me-2"
+                >Show per page:</label
+              >
+              <select id="per-page" class="form-select w-auto">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+              </select>
+            </div>
+
+            <!-- Pagination Controls -->
+            <nav>
+              <label for="per-page" class="form-label me-2">Pagination:</label>
+              <ul class="pagination">
+                <li class="page-item">
+                  <button class="page-link text-muted" id="prev-page">
+                    Previous
+                  </button>
+                </li>
+                <li class="page-item">
+                  <span class="page-link text-muted" id="page-info"
+                    >Page 1</span
+                  >
+                </li>
+                <li class="page-item">
+                  <button class="page-link text-muted" id="next-page">
+                    Next
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% include 'components/footer.html' %}
+
+    <!-- jQuery (Required) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        let page = 1;
+        let perPage = $("#per-page").val();
+        let sortBy = "timestamp";
+        let order = "desc";
+
+        function fetchSales() {
+          let searchID = $("#search-input").val().trim();
+          let apiUrl = `/api/get-sales?page=${page}&per_page=${perPage}&sort_by=${sortBy}&order=${order}`;
+
+          if (searchID) {
+            apiUrl = `/api/get-sales?id=${searchID}`;
+          }
+
+          $.get(apiUrl, function (response) {
+            if (searchID) {
+              let sale = response.sale;
+              if (!sale) {
+                $("#sales-table-body").html(
+                  '<tr><td colspan="4" class="text-center">No data found</td></tr>'
+                );
+                return;
+              }
+              $("#sales-table-body").html(`
+              <tr>
+                <td>${sale.id}</td>
+                <td>${sale.total_sum}</td>
+                <td>${sale.earnings}</td>
+                <td>${sale.timestamp}</td>
+              </tr>
+            `);
+            } else {
+              let sales = response.sales;
+              let totalPages = response.total_pages;
+              $("#page-info").text(`Page ${page} of ${totalPages}`);
+
+              if (sales.length === 0) {
+                $("#sales-table-body").html(
+                  '<tr><td colspan="4" class="text-center">No sales data found</td></tr>'
+                );
+                return;
+              }
+
+              let tableRows = sales
+                .map(
+                  (sale) => `
+              <tr>
+                <td>${sale.id}</td>
+                <td>${sale.total_sum}</td>
+                <td>${sale.earnings}</td>
+                <td class="text-end">${sale.timestamp}</td>
+              </tr>
+            `
+                )
+                .join("");
+
+              $("#sales-table-body").html(tableRows);
+            }
+          }).fail(function () {
+            $("#sales-table-body").html(
+              '<tr><td colspan="4" class="text-center">No Data Results</td></tr>'
+            );
+          });
+        }
+
+        // Initial fetch
+        fetchSales();
+
+        // Search by ID
+        $("#search-input").on("keyup", function () {
+          page = 1;
+          fetchSales();
+        });
+
+        // Sorting
+        $(".sortable").on("click", function () {
+          sortBy = $(this).data("sort");
+          order = order === "asc" ? "desc" : "asc";
+          fetchSales();
+        });
+
+        // Pagination
+        $("#prev-page").on("click", function () {
+          if (page > 1) {
+            page--;
+            fetchSales();
+          }
+        });
+
+        $("#next-page").on("click", function () {
+          page++;
+          fetchSales();
+        });
+
+        // Per Page Selection
+        $("#per-page").on("change", function () {
+          perPage = $(this).val();
+          page = 1; // Reset to page 1
+          fetchSales();
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,22 +1,22 @@
 import firebase_admin
-import json
 from firebase_admin import credentials, db
 
 # Initialize Firebase
-cred = credentials.Certificate("finance-department-3f0ba-firebase-adminsdk-fbsvc-1a069acada.json")
+cred = credentials.Certificate("account_key.json")
 firebase_admin.initialize_app(cred, {
     "databaseURL": "https://finance-department-3f0ba-default-rtdb.asia-southeast1.firebasedatabase.app/"
 })
 
-# Load JSON file
-with open("static/json/sales.json", "r") as file:
-    items = json.load(file)
+# Reference to the "sales" collection
+sales_ref = db.reference("sales")
 
-# Reference to "items" collection in Firebase
-items_ref = db.reference("sales")
+# Fetch sales data
+sales_data = sales_ref.get()
 
-# Push each product to Firebaseasfg
-for item in items:
-    items_ref.push(item)
-
-print("items added successfully!")
+# Print the retrieved data
+if sales_data:
+    print("Sales Data Retrieved:")
+    for key, value in sales_data.items():
+        print(f"ID: {key}, Data: {value}")
+else:
+    print("No sales data found.")

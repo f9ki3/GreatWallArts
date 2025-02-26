@@ -1,0 +1,52 @@
+{
+  "budget_requests": {
+    "request_id_12345": {
+      "reference_number": "REF12345",
+      "requested_by": "John Doe",
+      "requested_department": "IT",
+      "requested_contact": "+123456789",
+      "requested_email": "johndoe@example.com",
+      "date_of_request": "2025-02-26",
+      "budget_details": [
+        {
+          "expense_category": "Equipment",
+          "amount": 1000,
+          "description": "New laptop purchase"
+        },
+        {
+          "expense_category": "Software",
+          "amount": 500,
+          "description": "Annual software subscription"
+        }
+      ],
+      "status": "approved",
+      "approval_details": {
+        "approved_by": "Jane Smith",
+        "date_of_approval": "2025-02-27",
+        "department": "Finance",
+        "contact_number": "+987654321"
+      }
+    },
+    "request_id_67890": {
+      "reference_number": "REF67890",
+      "requested_by": "Alice Brown",
+      "requested_department": "HR",
+      "requested_contact": "+1122334455",
+      "requested_email": "alice@example.com",
+      "date_of_request": "2025-02-25",
+      "budget_details": [
+        {
+          "expense_category": "Training",
+          "amount": 2000,
+          "description": "Employee workshop"
+        }
+      ],
+      "status": "declined",
+      "decline_details": {
+        "declined_by": "Mark Wilson",
+        "date_of_decline": "2025-02-26",
+        "reason": "Budget constraints"
+      }
+    }
+  }
+}
