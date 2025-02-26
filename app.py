@@ -4,11 +4,26 @@ import firebase_admin
 from firebase_admin import credentials, db
 import os
 
-JWT = os.getenv("JWT")
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+import requests
+import firebase_admin
+from firebase_admin import credentials, db
+import os
+import json
 
-# Initialize Firebase
+
 # cred = credentials.Certificate("account_key.json")
-cred = credentials.Certificate(JWT)
+# Get the credentials from environment variable
+firebase_credentials = os.getenv("FIREBASE_CREDENTIALS")
+
+if firebase_credentials:
+    # Parse JSON string from environment variable
+    cred_dict = json.loads(firebase_credentials)
+    cred = credentials.Certificate(cred_dict)
+else:
+    raise ValueError("FIREBASE_CREDENTIALS environment variable is not set or invalid.")
+
+# Initialize Firebase Admin SDK
 firebase_admin.initialize_app(cred, {
     "databaseURL": "https://finance-department-3f0ba-default-rtdb.asia-southeast1.firebasedatabase.app/"
 })
