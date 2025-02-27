@@ -9,6 +9,22 @@
       type="image/png"
       href="{{ url_for('static', filename='img/gwoa_logo.png') }}"
     />
+    <style>
+      .fixed-sidebar {
+        position: fixed;
+        left: 10;
+        height: 100vh;
+        width: 25%; /* Adjust width */
+        overflow-y: auto;
+        background: #fff; /* Optional background */
+      }
+
+      .scroll-content {
+        margin-left: 26%; /* Adjust to match sidebar width */
+        padding: 20px;
+      }
+    </style>
+
     {% include 'components/header.html'%}
   </head>
   <body>
@@ -16,10 +32,10 @@
       class="w-100"
       style="position: fixed; background-color: #ffd906; height: 10px"
     ></div>
-    <div class="container">
+    <div class="container" style="font-size: 20px;">
       <div class="row pt-5">
         <!-- Sidebar Section -->
-        <div class="col-12 col-md-3 sticky-top">
+        <div class="col-12 col-md-2 fixed-sidebar">
           <div>
             <img
               class="img-fluid me-2"
@@ -45,10 +61,10 @@
             >
           </p>
 
-          <hr />
+          <div class="w-100" style="border: 5px solid #ffd906" /></div>
           <h3 class="fw-bolder mt-4">
             <a href="#features" class="text-muted text-decoration-none"
-              >Features</a
+              >API Features</a
             >
           </h3>
 
@@ -100,7 +116,7 @@
             </p>
           </div>
 
-          <hr />
+          <div class="w-100 mt-3 mb-3" style="border: 5px solid #ffd906" /></div>
           <h3 class="fw-bolder">
             <a href="#more-info" class="text-muted text-decoration-none"
               >More Info</a
@@ -108,12 +124,12 @@
           </h3>
         </div>
 
-        <div class="col-12 col-md-9 text-muted">
+        <div class="col-12 col-md-9 text-muted scroll-content">
           <div class="mt-4 d-flex">
-            <h5 class="me-5" style="font-size: 20px">
+            <h5 class="me-5 doc">
               <i class="bi bi-file-earmark-text"></i> Documentation 1.5.x
             </h5>
-            <h5 class="me-5" style="font-size: 20px">
+            <h5 class="me-5 lnk" >
               <i class="bi bi-link-45deg"></i>
               <a
                 href="https://greatwallarts.onrender.com/"
@@ -126,26 +142,42 @@
 
           <div class="mt-5">
             <h1 id="introduction" class="fw-bolder">Introduction</h1>
-            <p>
-              Welcome to the FINANCE API documentation. This documentation
-              provides detailed information on how to integrate with our API.
+            <p style="text-align: justify;">
+              Welcome to the FINANCE API documentation. This guide provides
+              detailed instructions on integrating with our API for seamless
+              financial management. With our Budget Planning feature, you can
+              create and track budgets efficiently. The Sales Invoices module
+              allows you to generate and manage invoices with ease. Explore our
+              API to streamline your financial processes.
             </p>
           </div>
-
+<hr>
           <div class="mt-5">
             <h1 id="getting-started" class="fw-bolder">Getting Started</h1>
-            <p>
-              Learn how to authenticate, make requests, and handle responses.
+            <p style="text-align: justify;">
+              Learn how to make requests and handle responses using our API.  
+              You can access the endpoints at  
+              <b>https://greatwallarts.onrender.com/api/{endpoints}</b>
+              Currently, no API key is required for access.
             </p>
           </div>
+          
+          <hr>
 
           <div class="mt-5">
             <h1 id="api-endpoints" class="fw-bolder">API Endpoints</h1>
             <p>
-              Explore the available API endpoints and their functionalities.
+              Use the following API endpoints to manage budget planning and sales invoice data.
             </p>
+            <ul class="endpoints">
+              <li><strong>GET /api/get-sales</strong> - Retrieve all sales data.</li>
+              <li><strong>GET /api/get-sales?sort_by=total_sum&order=asc</strong> - Retrieve sorted sales data (by total sum, earnings, or timestamp).</li>
+              <li><strong>GET /api/get-sales?page=2&per_page=3</strong> - Paginate sales data (customize page and items per page).</li>
+              <li><strong>GET /api/get-sales?id=-OJqeBQaJZ1aAeeseDeR</strong> - Retrieve a specific sale by ID.</li>
+            </ul>
           </div>
-
+          
+            <hr>
           <div class="mt-5">
             <h1 id="features" class="fw-bolder">Features</h1>
             <h3 id="create-budgets">Create Budgets</h3>

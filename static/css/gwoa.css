@@ -27,6 +27,14 @@
 .bg-accent-green {
   color: green;
 }
+
+.doc {
+  font-size: 20px;
+}
+.lnk {
+  font-size: 20px;
+}
+
 /* Hide the sidebar on screens smaller than or equal to 768px */
 @media screen and (max-width: 1000px) {
   .gwa-sidebar {
@@ -38,6 +46,21 @@
   .navigation {
     display: flex;
     justify-content: space-between;
+  }
+  .fixed-sidebar {
+    display: none;
+  }
+  .scroll-content {
+    margin: 0px;
+  }
+  .doc {
+    display: none;
+  }
+  .lnk {
+    display: none;
+  }
+  .endpoints {
+    font-size: 12px;
   }
 }
 

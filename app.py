@@ -42,6 +42,12 @@ def dashboard():
         return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
     return render_template('pages/dashboard.html')  # Show dashboard if logged in
 
+@app.route('/view_sales')
+def view_sales():
+    if 'user' not in session:  # Check if user is logged in
+        return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
+    return render_template('pages/view_sales.html')  # Show dashboard if logged in
+
 @app.route('/logout')
 def logout():
     session.clear()
