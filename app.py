@@ -4,8 +4,8 @@ import firebase_admin
 from firebase_admin import credentials, db
 
 # Initialize Firebase
-# cred = credentials.Certificate("account_key.json")
-cred = credentials.Certificate("/etc/secrets/account_key.json")
+cred = credentials.Certificate("account_key.json")
+# cred = credentials.Certificate("/etc/secrets/account_key.json")
 firebase_admin.initialize_app(cred, {
     "databaseURL": "https://finance-department-3f0ba-default-rtdb.asia-southeast1.firebasedatabase.app/"
 })
@@ -137,7 +137,5 @@ def get_sales():
         "sales": paginated_sales
     })
 
-
-    
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
