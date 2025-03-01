@@ -219,7 +219,7 @@
                 <li><strong>GET /api/get-sales?sort_by=total_sum&order=asc</strong> - Retrieve sales data sorted by total sum, earnings, or timestamp.</li>
                 <li><strong>GET /api/get-sales?page=2&per_page=3</strong> - Retrieve paginated sales data with customizable page and item limits.</li>
                 <li><strong>GET /api/get-sales?id=-OJqeBQaJZ1aAeeseDeR</strong> - Fetch a specific sale by its ID.</li>
-                <li><strong>DELETE /api/delete-sales</strong> - Remove sales invoices.</li>
+                <li><strong>DELETE /api/delete-sale/-OJqeBQaJZ1aAeeseDeR</strong> - Remove sales invoices.</li>
                 
             </ul>
           </div>
@@ -510,20 +510,17 @@
                     <hr id="delete-sales-invoices" class="mt-5">
                     <h3 class="fw-bolder">Delete Sales Invoice</h3>
                     <li >
-                        <strong>DELETE /api/delete-sales</strong> </strong>  
+                        <strong>DELETE api/delete-sale/{value}</strong> </strong>  
                         - Remove sales invoices by its <strong>id</strong>.
                     
                         <br><strong>Request Example (JSON):</strong>
-                        <pre><code>{
-                    "id": "OJqeBQaJZ1aAeeseDeR"
-                
-}</code></pre>
+                        <pre><code>DELETE api/delete-sale/-OKFs4jJJ84poTnnnIUA</code></pre>
                     
                         <strong>Response Example:</strong>
                         <pre><code>{
-                            "status": "success",
-                            "message": "Sales invoice deleted successfully."
-                        }</code></pre>
+                    "message": "Sale with ID -OKFs4jJJ84poTnnnIUA has been deleted.",
+                    "status": "success"
+                }</code></pre>
                     </li>                    
                 </ul>
             </div>

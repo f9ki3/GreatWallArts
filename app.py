@@ -4,8 +4,8 @@ import firebase_admin
 from firebase_admin import credentials, db
 
 # Initialize Firebase
-# cred = credentials.Certificate("account_key.json")
-cred = credentials.Certificate("/etc/secrets/account_key.json")
+cred = credentials.Certificate("account_key.json")
+# cred = credentials.Certificate("/etc/secrets/account_key.json")
 firebase_admin.initialize_app(cred, {
     "databaseURL": "https://finance-department-3f0ba-default-rtdb.asia-southeast1.firebasedatabase.app/"
 })
@@ -136,6 +136,54 @@ def get_sales():
         "total_pages": (total_records + per_page - 1) // per_page,
         "sales": paginated_sales
     })
+
+
+@app.route('/api/generate-sales', methods=['POST'])
+def generate_sales():
+
+    # Get sales data from request body
+    sales_data = request.json  
+
+    if not sales_data:
+        return jsonify({
+            "status": "error",
+            "message": "Invalid or missing sales data."
+        }), 400
+
+    # Reference to the "sales" collection
+    sales_ref = db.reference("sales")
+
+    # Save data to Firebase with a unique key
+    new_sale_ref = sales_ref.push(sales_data)
+
+    return jsonify({
+        "status": "success",
+        "message": "Sales invoice generated successfully.",
+        "sale_id": new_sale_ref.key  # Return generated key for reference
+    })
+
+@app.route('/api/delete-sale/<sale_id>', methods=['DELETE'])
+def delete_sale(sale_id):
+    """Deletes a specific sale entry from Firebase using its unique key."""
+
+    # Reference to the specific sale entry
+    sale_ref = db.reference(f"sales/{sale_id}")
+
+    # Check if the sale exists
+    if not sale_ref.get():
+        return jsonify({
+            "status": "error",
+            "message": "Sale ID not found."
+        }), 404
+
+    # Delete the sale entry
+    sale_ref.delete()
+
+    return jsonify({
+        "status": "success",
+        "message": f"Sale with ID {sale_id} has been deleted."
+    })
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
