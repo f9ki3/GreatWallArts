@@ -13,6 +13,11 @@ firebase_admin.initialize_app(cred, {
 app = Flask(__name__)
 app.secret_key = '#@jhkasjahs'  # Required for session management
 
+# Custom 404 error handler
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('/pages/404.html'), 404
+
 @app.route('/')
 def RouteLogin():
     if 'user' not in session:  # Check if user is logged in

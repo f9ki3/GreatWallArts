@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>404 - Page Not Found</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='img/gwoa_logo.png') }}"
+    />
+    {% include 'components/header.html' %}
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        text-align: center;
+        background-color: #f8f9fa;
+      }
+      .error-container {
+        max-width: 600px;
+        padding: 20px;
+      }
+      .error-container h1 {
+        font-size: 3rem;
+        font-weight: bold;
+        color: #333;
+      }
+      .error-container p {
+        font-size: 1.2rem;
+        color: #666;
+      }
+      .btn-home {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="error-container">
+      <h1>Oops! Page Not Found</h1>
+      <p>
+        The page you are looking for might have been removed or is temporarily
+        unavailable.
+      </p>
+      <img
+        class="img-fluid"
+        style="width: 50%"
+        src="{{ url_for('static', filename='img/404.svg') }}"
+        alt="404 Error"
+      />
+    </div>
+    <a href="/" class="btn btn-warning w-25 btn-home">Go Back Home</a>
+    {% include 'components/footer.html' %}
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+  </body>
+</html>
