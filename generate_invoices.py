@@ -7,84 +7,71 @@ file_path = "static/json/products.json"
 with open(file_path, "r") as file:
     products = json.load(file)
 
-# Define invoice parameters 
-tax_rate = 10  # 10% tax rate
-discount_rate = 5  # 5% discount
-
-# Generate random invoices for February 2024
+# Generate random invoices
 invoices = []
-start_date = datetime(2024, 2, 1)
-end_date = datetime(2024, 2, 28)
+invoice_ids = [1001, 1002]
+po_ids = ["PO-5678", "PO-6789"]
+status_choices = ["Paid", "Pending"]
 
-invoice_id = 1001  # Start invoice numbering
-
-while start_date <= end_date:
-    num_items = random.randint(1, 5)  # Number of items in a transaction
-    selected_items = random.sample(products, num_items)  # Select random products
-
-    cart_items = []
+def generate_invoice(invoice_id, po_id, status):
+    selected_products = random.sample(products, 4)  # Select 4 random products
+    order_date = datetime(2025, 2, 20) + timedelta(days=random.randint(0, 5))
+    shipment_date = order_date + timedelta(days=5)
+    delivery_date = shipment_date + timedelta(days=10)
+    due_date = delivery_date + timedelta(days=5)
+    
+    purchase_order = {
+        "po_id": po_id,
+        "order_date": order_date.strftime("%Y-%m-%d"),
+        "shipment_date": shipment_date.strftime("%Y-%m-%d"),
+        "delivery_date": delivery_date.strftime("%Y-%m-%d"),
+        "supplier": "Great Wall Arts PH",
+        "products": []
+    }
+    
     subtotal = 0
+    for product in selected_products:
+        quantity = random.randint(1, 3)
+        unit_price = product.get("sale_price", 0) or product.get("regular_price", 0)  # Ensure no None values
 
-    for item in selected_items:
-        # Get prices, ensuring they are valid numbers
-        sale_price = item.get("sale_price")
-        regular_price = item.get("regular_price", 0)
-
-        # Ensure sale_price is valid; otherwise, fallback to regular_price
-        try:
-            sale_price = float(sale_price) if sale_price is not None else float(regular_price)
-        except ValueError:
-            sale_price = float(regular_price)
-
-        quantity = random.randint(1, 3)  # Random quantity per item
-        total_price = sale_price * quantity  # No more 'NoneType' error
-
-        cart_items.append({
-            "name": item.get("name", "Unknown Product"),
-            "brand": item.get("brand", "Unknown Brand"),
-            "quantity": quantity,
-            "unit_price": sale_price,
-            "total_price": round(total_price, 2)
-        })
-        
+        total_price = quantity * unit_price  # No more TypeError
         subtotal += total_price
 
-    # Calculate tax, discount, and total amount
-    tax_amount = round(subtotal * (tax_rate / 100), 2)
-    discount_amount = round(subtotal * (discount_rate / 100), 2)
+        purchase_order["products"].append({
+            "name": product["name"],
+            "quantity": quantity,
+            "unit_price": unit_price,
+            "total_price": total_price
+        })
+
+    
+    tax_rate = random.choice([10, 12])
+    tax_amount = round((subtotal * tax_rate) / 100, 2)
+    discount_amount = random.choice([200, 300])
     total_amount = round(subtotal + tax_amount - discount_amount, 2)
-
-    # Create invoice entry
+    created_at = datetime(2025, 2, invoice_id - 1000).strftime("%Y-%m-%d")
+    
     invoice = {
-        "invoice": {
-            "invoice_id": invoice_id,
-            "invoice_number": f"INV-{start_date.strftime('%Y%m%d')}",
-            "po_id": f"PO-{random.randint(1000, 9999)}",
-            "vendor_id": f"V-{random.randint(1000, 9999)}",
-            "due_date": (start_date + timedelta(days=15)).strftime("%Y-%m-%d"),
-            "subtotal": round(subtotal, 2),
-            "tax_rate": tax_rate,
-            "tax_amount": tax_amount,
-            "discount_amount": discount_amount,
-            "total_amount": total_amount,
-            "status": random.choice(["Paid", "Pending"]),
-            "created_at": start_date.strftime("%Y-%m-%d"),
-            "updated_at": start_date.strftime("%Y-%m-%d"),
-            "deleted_at": None
-        },
-        "purchase_order": {
-            "po_id": f"PO-{random.randint(1000, 9999)}",
-            "order_date": start_date.strftime("%Y-%m-%d"),
-            "shipment_date": (start_date + timedelta(days=3)).strftime("%Y-%m-%d"),
-            "delivery_date": (start_date + timedelta(days=10)).strftime("%Y-%m-%d"),
-            "supplier": "Great Wall Arts PH",
-            "products": cart_items
-        }
+        "invoice_id": invoice_id,
+        "invoice_number": f"INV-202402{invoice_id - 1000}",
+        "po_id": po_id,
+        "vendor_id": f"V-{random.randint(1000, 9999)}",
+        "due_date": due_date.strftime("%Y-%m-%d"),
+        "subtotal": subtotal,
+        "tax_rate": tax_rate,
+        "tax_amount": tax_amount,
+        "discount_amount": discount_amount,
+        "total_amount": total_amount,
+        "status": status,
+        "created_at": created_at,
+        "updated_at": None if status == "Pending" else created_at,
+        "deleted_at": None
     }
+    
+    return {"invoice": invoice, "purchase_order": purchase_order}
 
-    invoices.append(invoice)
-    invoice_id += 1
-    start_date += timedelta(days=1)
+for i in range(2):
+    invoices.append(generate_invoice(invoice_ids[i], po_ids[i], status_choices[i]))
 
 # Save the generated invoices to a JSON file
 output_path = "static/generated/invoices.json"
@@ -92,4 +79,4 @@ with open(output_path, "w") as outfile:
     json.dump({"invoices": invoices}, outfile, indent=2)
 
 # Provide the output path
-print(f"Invoices saved to: {output_path}")
+output_path

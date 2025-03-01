@@ -1,0 +1,106 @@
+{
+  "invoices": [
+    {
+      "invoice": {
+        "invoice_id": 1001,
+        "invoice_number": "INV-2024021",
+        "po_id": "PO-5678",
+        "vendor_id": "V-6475",
+        "due_date": "2025-03-17",
+        "subtotal": 6937.0,
+        "tax_rate": 10,
+        "tax_amount": 693.7,
+        "discount_amount": 300,
+        "total_amount": 7330.7,
+        "status": "Paid",
+        "created_at": "2025-02-01",
+        "updated_at": "2025-02-01",
+        "deleted_at": null
+      },
+      "purchase_order": {
+        "po_id": "PO-5678",
+        "order_date": "2025-02-25",
+        "shipment_date": "2025-03-02",
+        "delivery_date": "2025-03-12",
+        "supplier": "Great Wall Arts PH",
+        "products": [
+          {
+            "name": "JOSEPH Liquor Gift Set (Baileys)",
+            "quantity": 2,
+            "unit_price": 1399.0,
+            "total_price": 2798.0
+          },
+          {
+            "name": "BOAZ (10x18 & ROLLING PIN)",
+            "quantity": 2,
+            "unit_price": 1800.0,
+            "total_price": 3600.0
+          },
+          {
+            "name": "Small bamboo Fan with Personalized Laser Engraved",
+            "quantity": 1,
+            "unit_price": 140.0,
+            "total_price": 140.0
+          },
+          {
+            "name": "EDEN CHEESEBOARD W/ HANDLE",
+            "quantity": 1,
+            "unit_price": 399.0,
+            "total_price": 399.0
+          }
+        ]
+      }
+    },
+    {
+      "invoice": {
+        "invoice_id": 1002,
+        "invoice_number": "INV-2024022",
+        "po_id": "PO-6789",
+        "vendor_id": "V-6252",
+        "due_date": "2025-03-12",
+        "subtotal": 9937.0,
+        "tax_rate": 12,
+        "tax_amount": 1192.44,
+        "discount_amount": 200,
+        "total_amount": 10929.44,
+        "status": "Pending",
+        "created_at": "2025-02-02",
+        "updated_at": null,
+        "deleted_at": null
+      },
+      "purchase_order": {
+        "po_id": "PO-6789",
+        "order_date": "2025-02-20",
+        "shipment_date": "2025-02-25",
+        "delivery_date": "2025-03-07",
+        "supplier": "Great Wall Arts PH",
+        "products": [
+          {
+            "name": "MAGDALA (Magic Mug)",
+            "quantity": 2,
+            "unit_price": 220.0,
+            "total_price": 440.0
+          },
+          {
+            "name": "FLORA LOVE PASTEL PINK",
+            "quantity": 1,
+            "unit_price": 3500.0,
+            "total_price": 3500.0
+          },
+          {
+            "name": "APRIL (WATERPROOF RAINCOAT)",
+            "quantity": 2,
+            "unit_price": 450.0,
+            "total_price": 900.0
+          },
+          {
+            "name": "ASHER'S COFFEE GIFT SET C",
+            "quantity": 3,
+            "unit_price": 1699.0,
+            "total_price": 5097.0
+          }
+        ]
+      }
+    }
+  ]
+}

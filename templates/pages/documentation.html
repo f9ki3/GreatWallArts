@@ -23,6 +23,15 @@
         margin-left: 26%; /* Adjust to match sidebar width */
         padding: 20px;
       }
+      pre {
+        padding: 10px;
+        border-radius: 10px;
+        background-color: #f0f0f0;
+        border: 1px solid rgb(230, 225, 225);
+        min-height: 150px; /* Adjust this value as needed */
+        max-height: 400px; /* Optional: Set a max height */
+    }
+
     </style>
 
     {% include 'components/header.html'%}
@@ -67,7 +76,65 @@
               >API Features</a
             >
           </h3>
+          <!-- Collapse for Sales Invoices -->
+          <button
+            class="btn text-muted text-decoration-none d-block text-start fw-bold mt-2"
+            data-bs-toggle="collapse"
+            data-bs-target="#salesInvoices"
+          >
+            ▼ Sales Invoices
+          </button>
+          <div id="salesInvoices" class="collapse ps-3">
+            <p>
+              -
+              <a
+                href="#generate-invoices"
+                class="text-muted text-decoration-none"
+                >Generate Invoices</a
+              >
+            </p>
+            <p>
+                -
+                <a
+                  href="#get-all-invoices"
+                  class="text-muted text-decoration-none"
+                  >Get All Sales Invoices</a
+                >
+              </p>
+              <p>
+                -
+                <a
+                  href="#sort-arrangez-invoices"
+                  class="text-muted text-decoration-none"
+                  >Sort and Arrange Sales</a
+                >
+              </p>
+              <p>
+                -
+                <a
+                  href="#sales-pagination"
+                  class="text-muted text-decoration-none"
+                  >Sales Pagination</a
+                >
+              </p>
+              <p>
+                -
+                <a
+                  href="#search-sales-invoices"
+                  class="text-muted text-decoration-none"
+                  >Search Sales Invoice</a
+                >
+              </p>
 
+              <p>
+                -
+                <a
+                  href="#delete-sales-invoices"
+                  class="text-muted text-decoration-none"
+                  >Delete Sales Invoice</a
+                >
+              </p>
+          </div>
           <!-- Collapse for Budget Planning -->
           <button
             class="btn text-muted text-decoration-none d-block text-start fw-bold"
@@ -91,30 +158,7 @@
             </p>
           </div>
 
-          <!-- Collapse for Sales Invoices -->
-          <button
-            class="btn text-muted text-decoration-none d-block text-start fw-bold mt-2"
-            data-bs-toggle="collapse"
-            data-bs-target="#salesInvoices"
-          >
-            ▼ Sales Invoices
-          </button>
-          <div id="salesInvoices" class="collapse ps-3">
-            <p>
-              -
-              <a
-                href="#generate-invoices"
-                class="text-muted text-decoration-none"
-                >Generate Invoices</a
-              >
-            </p>
-            <p>
-              -
-              <a href="#manage-payments" class="text-muted text-decoration-none"
-                >Manage Payments</a
-              >
-            </p>
-          </div>
+          
 
           <div class="w-100 mt-3 mb-3" style="border: 5px solid #ffd906" /></div>
           <h3 class="fw-bolder">
@@ -127,7 +171,7 @@
         <div class="col-12 col-md-9 text-muted scroll-content">
           <div class="mt-4 d-flex">
             <h5 class="me-5 doc">
-              <i class="bi bi-file-earmark-text"></i> Documentation 1.5.x
+              <i class="bi bi-file-earmark-text"></i> Documentation 1.1.x
             </h5>
             <h5 class="me-5 lnk" >
               <i class="bi bi-link-45deg"></i>
@@ -170,29 +214,321 @@
               Use the following API endpoints to manage budget planning and sales invoice data.
             </p>
             <ul class="endpoints">
-              <li><strong>GET /api/get-sales</strong> - Retrieve all sales data.</li>
-              <li><strong>GET /api/get-sales?sort_by=total_sum&order=asc</strong> - Retrieve sorted sales data (by total sum, earnings, or timestamp).</li>
-              <li><strong>GET /api/get-sales?page=2&per_page=3</strong> - Paginate sales data (customize page and items per page).</li>
-              <li><strong>GET /api/get-sales?id=-OJqeBQaJZ1aAeeseDeR</strong> - Retrieve a specific sale by ID.</li>
+                <li><strong>POST /api/generate-sales</strong> - Create sales invoices from Core1.</li>
+                <li><strong>GET /api/get-sales</strong> - Fetch all sales data.</li>
+                <li><strong>GET /api/get-sales?sort_by=total_sum&order=asc</strong> - Retrieve sales data sorted by total sum, earnings, or timestamp.</li>
+                <li><strong>GET /api/get-sales?page=2&per_page=3</strong> - Retrieve paginated sales data with customizable page and item limits.</li>
+                <li><strong>GET /api/get-sales?id=-OJqeBQaJZ1aAeeseDeR</strong> - Fetch a specific sale by its ID.</li>
+                <li><strong>DELETE /api/delete-sales</strong> - Remove sales invoices.</li>
+                
             </ul>
           </div>
           
             <hr>
-          <div class="mt-5">
-            <h1 id="features" class="fw-bolder">Features</h1>
-            <h3 id="create-budgets">Create Budgets</h3>
-            <p>Details on how to create and manage budgets through the API.</p>
-
-            <h3 id="view-reports">View Reports</h3>
-            <p>Instructions on retrieving and analyzing financial reports.</p>
-
-            <h3 id="generate-invoices">Generate Invoices</h3>
-            <p>Guide on generating invoices programmatically.</p>
-
-            <h3 id="manage-payments">Manage Payments</h3>
-            <p>Steps to process and track payments via the API.</p>
-          </div>
-
+            <div class="mt-5">
+                <h1 class="fw-bolder">Sales Invoices</h1>
+                <p>Use the following API endpoints to manage sales invoices.</p>
+                
+                <ul class="endpoints">
+                    <hr id="generate-invoices">
+                    <h3 class="fw-bolder">Generate Invoices</h3>
+                    <li>
+                        <strong>POST /api/generate-sales</strong> - Create a sales invoice from Core1.  
+                        <br><strong>Request Example (JSON):</strong>
+                        <pre><code>{
+                "timestamp": "2024-01-01 00:00:00",
+                "cart_items": [
+                    {
+                        "product_name": "ABRAHAM 2024 PLANNER WITH MAGNETIC LOCK",
+                        "regular_price": 500.0,
+                        "sale_price": 399.0
+                    },
+                    {
+                        "product_name": "ELISHA 2 (CHEESEBOARD and WINE SET)",
+                        "regular_price": 1299.0,
+                        "sale_price": 999.0
+                    }
+                ],
+                "total_sum": 1398.0,
+                "earnings": 401.0
+            }</code></pre>
+                        <strong>Response Example:</strong>
+                        <pre><code>{
+                "status": "success",
+                "message": "Sales invoice generated successfully."
+            }</code></pre>
+                    </li>
+            
+                    <hr id="get-all-invoices" class="mt-5">
+                    <h3 class="fw-bolder">Get All Sales Invoices</h3>
+                    <li>
+                        <strong>GET /api/get-sales</strong> - Retrieve all sales invoices.  
+                        <br><strong>Request Example:</strong>
+                        <pre><code>GET /api/get-sales</code></pre>
+                        <strong>Response Example:</strong>
+                        <pre><code>{
+                "page": 1,
+                "per_page": 10,
+                "sales": [
+                    {
+                        "cart_items": [
+                            {
+                                "product_name": "GALILEE 1 (WINE BOX with RED WINE)",
+                                "regular_price": 2000.0,
+                                "sale_price": 1500.0
+                            },
+                            {
+                                "product_name": "SHADRACH (PORTABLE BLENDER)",
+                                "regular_price": 899.0,
+                                "sale_price": 799.0
+                            }
+                        ],
+                        "earnings": 1001.0,
+                        "id": "-OJqeOOSM00HN5mCgKPZ",
+                        "timestamp": "2024-12-31 00:00:00",
+                        "total_sum": 5798.0
+                    }
+                ]
+            }</code></pre>
+                    </li>
+                    <hr id="sort-arrangez-invoices" class="mt-5">
+                    <h3 class="fw-bolder">Sort and Arrange Sales</h3>
+                    <li id="get-all-invoices">
+                        <strong>GET /api/get-sales?sort_by={value}&order={value}</strong>  
+                        - Retrieve sales invoices sorted by <strong>total_sum</strong>, <strong>earnings</strong>, or <strong>timestamp</strong>.  
+                        - Sorting order can be <strong>asc</strong> (ascending) or <strong>desc</strong> (descending).  
+                    
+                        <br><strong>Request Example:</strong>
+                        <pre><code>GET /api/get-sales?sort_by=total_sum&order=asc</code></pre>
+                    
+                        <strong>Response Example:</strong>
+                        <pre><code>{
+                "page": 1,
+                "per_page": 10,
+                "sales": [
+                    {
+                    "earnings": 0,
+                    "id": "-OJqeBVL8C63tRfgLNU8",
+                    "timestamp": "2024-01-05 00:00:00",
+                    "total_sum": 0
+                    },
+                    {
+                    "earnings": 0,
+                    "id": "-OJqeBjnqyMJx8YHDTTB",
+                    "timestamp": "2024-01-15 00:00:00",
+                    "total_sum": 0
+                    },
+                    {
+                    "earnings": 0,
+                    "id": "-OJqeD15Ts2KuKDLk1X8",
+                    "timestamp": "2024-03-12 00:00:00",
+                    "total_sum": 0
+                    },
+                    {
+                    "earnings": 0,
+                    "id": "-OJqeF2FKCSpvykqF3uR",
+                    "timestamp": "2024-05-31 00:00:00",
+                    "total_sum": 0
+                    },
+                    {
+                    "earnings": 0,
+                    "id": "-OJqeFeQBcjbLOLgxN76",
+                    "timestamp": "2024-06-25 00:00:00",
+                    "total_sum": 0
+                    },
+                    {
+                    "earnings": 0,
+                    "id": "-OJqeIqpHd5YQU9Ws-WD",
+                    "timestamp": "2024-09-29 00:00:00",
+                    "total_sum": 0
+                    },
+                    {
+                    "earnings": 0,
+                    "id": "-OJqeJr-rXgm0nBFKRQs",
+                    "timestamp": "2024-10-14 00:00:00",
+                    "total_sum": 0
+                    },
+                    {
+                    "cart_items": [
+                        {
+                        "product_name": "APRIL (AUTOMATIC FOLDING UMBRELLA)",
+                        "regular_price": 0,
+                        "sale_price": 0
+                        }
+                    ],
+                    "earnings": 0,
+                    "id": "-OJqeKOHrlCbIbLwo6Ik",
+                    "timestamp": "2024-10-07 00:00:00",
+                    "total_sum": 0
+                    },
+                    {
+                    "earnings": 0,
+                    "id": "-OJqeKVukig1FB67U_Jo",
+                    "timestamp": "2024-10-12 00:00:00",
+                    "total_sum": 0
+                    },
+                    {
+                    "earnings": 0,
+                    "id": "-OJqeMW6H3lT6lLEp0u6",
+                    "timestamp": "2024-11-05 00:00:00",
+                    "total_sum": 0
+                    }
+                ],
+                "total_pages": 68,
+                "total_records": 672
+                }</code></pre>
+                    </li> 
+                    <hr id="sales-pagination" class="mt-5">
+                    <h3 class="fw-bolder">Sales Pagination</h3>
+                    <li >
+                        <strong>GET /api/get-sales?page={value}&per_page={value} </strong>  
+                        - Retrieve paginated sales data with customizable <strong>page</strong> and item limits <strong>per_page</strong>.  
+                    
+                        <br><strong>Request Example:</strong>
+                        <pre><code>GET /api/get-sales?page=2&per_page=3</code></pre>
+                    
+                        <strong>Response Example:</strong>
+                        <pre><code>{
+                "page": 2,
+                "per_page": 3,
+                "sales": [
+                    {
+                    "cart_items": [
+                        {
+                        "product_name": "BITYAH (9x14 & 4.5x12)",
+                        "regular_price": 1600.0,
+                        "sale_price": 1100.0
+                        }
+                    ],
+                    "earnings": 500.0,
+                    "id": "-OJqeQWmyzG2shDjIn_L",
+                    "timestamp": "2024-12-31 00:00:00",
+                    "total_sum": 1100.0
+                    },
+                    {
+                    "cart_items": [
+                        {
+                        "product_name": "GATH (5x9)",
+                        "regular_price": 450.0,
+                        "sale_price": 350.0
+                        },
+                        {
+                        "product_name": "GOLGOTHA (Baby Pink/Sky Blue Glass Tumbler )",
+                        "regular_price": 400.0,
+                        "sale_price": 299.0
+                        },
+                        {
+                        "product_name": "EDEN CHEESEBOARD (RECTANGLE)",
+                        "regular_price": 500.0,
+                        "sale_price": 399.0
+                        },
+                        {
+                        "product_name": "ELISHA (CHEESEBOARD and WINE SET)",
+                        "regular_price": 1500.0,
+                        "sale_price": 1299.0
+                        },
+                        {
+                        "product_name": "BEA (RECHARGEABLE FAN)",
+                        "regular_price": 499.0,
+                        "sale_price": 350.0
+                        }
+                    ],
+                    "earnings": 652.0,
+                    "id": "-OJqeRBQIpwfBMzu2X30",
+                    "timestamp": "2024-12-31 00:00:00",
+                    "total_sum": 2697.0
+                    },
+                    {
+                    "cart_items": [
+                        {
+                        "product_name": "FURNITURE- 3012 CONSOLE TABLE",
+                        "regular_price": 10500.0,
+                        "sale_price": 9500.0
+                        },
+                        {
+                        "product_name": "SARAI DIGITAL CLOCK (RECTANGLE)",
+                        "regular_price": 700.0,
+                        "sale_price": 599.0
+                        }
+                    ],
+                    "earnings": 1101.0,
+                    "id": "-OJqeON3RHUKivK3wcC7",
+                    "timestamp": "2024-12-30 00:00:00",
+                    "total_sum": 10099.0
+                    }
+                ],
+                "total_pages": 224,
+                "total_records": 672
+                }</code></pre>
+                    </li> 
+                    <hr id="search-sales-invoices" class="mt-5">
+                    <h3 class="fw-bolder">Search Sales Invoice</h3>
+                    <li >
+                        <strong>GET /api/get-sales?id={value} </strong>  
+                        - Fetch a specific sale by its <strong>id</strong>.
+                    
+                        <br><strong>Request Example:</strong>
+                        <pre><code>GET /api/get-sales?id=-OJqeBQaJZ1aAeeseDeR</code></pre>
+                    
+                        <strong>Response Example:</strong>
+                        <pre><code>{
+                "sale": {
+                    "cart_items": [
+                    {
+                        "product_name": "ELISHA (CHEESEBOARD and WINE SET)",
+                        "regular_price": 1500.0,
+                        "sale_price": 1299.0
+                    },
+                    {
+                        "product_name": "JORDAN 450",
+                        "regular_price": 700.0,
+                        "sale_price": 550.0
+                    },
+                    {
+                        "product_name": "ALODIA 4 (PINK GIFT SET)",
+                        "regular_price": 799.0,
+                        "sale_price": 750.0
+                    },
+                    {
+                        "product_name": "ZAANAN 3 (BEDROOM LAMP)",
+                        "regular_price": 800.0,
+                        "sale_price": 599.0
+                    },
+                    {
+                        "product_name": "PEACE",
+                        "regular_price": 1500.0,
+                        "sale_price": 899.0
+                    }
+                    ],
+                    "earnings": 1202.0,
+                    "id": "-OJqeBQaJZ1aAeeseDeR",
+                    "timestamp": "2024-01-02 00:00:00",
+                    "total_sum": 4097.0
+                }
+}</code></pre>
+                    </li>    
+                    <hr id="delete-sales-invoices" class="mt-5">
+                    <h3 class="fw-bolder">Delete Sales Invoice</h3>
+                    <li >
+                        <strong>DELETE /api/delete-sales</strong> </strong>  
+                        - Remove sales invoices by its <strong>id</strong>.
+                    
+                        <br><strong>Request Example (JSON):</strong>
+                        <pre><code>{
+                    "id": "OJqeBQaJZ1aAeeseDeR"
+                
+}</code></pre>
+                    
+                        <strong>Response Example:</strong>
+                        <pre><code>{
+                            "status": "success",
+                            "message": "Sales invoice deleted successfully."
+                        }</code></pre>
+                    </li>                    
+                </ul>
+            </div>
+            
+            
           <div class="mt-5">
             <h1 id="more-info" class="fw-bolder">More Info</h1>
             <p>Find additional details and support information here.</p>

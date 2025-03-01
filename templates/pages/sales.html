@@ -15,6 +15,10 @@
     <title>Sales</title>
     {% include 'components/header.html' %}
     <style>
+      tbody tr {
+        cursor: pointer;
+      }
+
       .sortable:hover {
         cursor: pointer;
         text-decoration: underline;
@@ -49,7 +53,7 @@
         <div class="container mt-5">
           <div class="row align-items-center">
             <div class="col-md-12 col-12">
-              <h1 class="fw-bolder">Sales Transactions</h1>
+              <h1 class="fw-bolder">Sales Invoices</h1>
               <p class="text-muted">You can view and find recent sales here.</p>
             </div>
           </div>
@@ -68,7 +72,7 @@
 
           <!-- Sales Table -->
           <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table table-striped table-hover">
               <thead>
                 <tr>
                   <th><p>ID</p></th>
@@ -133,111 +137,6 @@
 
     <!-- jQuery (Required) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <script>
-      $(document).ready(function () {
-        let page = 1;
-        let perPage = $("#per-page").val();
-        let sortBy = "timestamp";
-        let order = "desc";
-
-        function fetchSales() {
-          let searchID = $("#search-input").val().trim();
-          let apiUrl = `/api/get-sales?page=${page}&per_page=${perPage}&sort_by=${sortBy}&order=${order}`;
-
-          if (searchID) {
-            apiUrl = `/api/get-sales?id=${searchID}`;
-          }
-
-          $.get(apiUrl, function (response) {
-            if (searchID) {
-              let sale = response.sale;
-              if (!sale) {
-                $("#sales-table-body").html(
-                  '<tr><td colspan="4" class="text-center">No data found</td></tr>'
-                );
-                return;
-              }
-              $("#sales-table-body").html(`
-              <tr>
-                <td><p>${sale.id}</p></td>
-                <td><p>${sale.total_sum}</p></td>
-                <td><p>${sale.earnings}</p></td>
-                <td class="text-end"><p>${sale.timestamp}</p></td>
-              </tr>
-
-            `);
-            } else {
-              let sales = response.sales;
-              let totalPages = response.total_pages;
-              $("#page-info").text(`Page ${page} of ${totalPages}`);
-
-              if (sales.length === 0) {
-                $("#sales-table-body").html(
-                  '<tr><td colspan="4" class="text-center">No sales data found</td></tr>'
-                );
-                return;
-              }
-
-              let tableRows = sales
-                .map(
-                  (sale) => `
-              <tr>
-                <td><p>${sale.id}</p></td>
-                <td><p>${sale.total_sum}</p></td>
-                <td><p>${sale.earnings}</p></td>
-                <td class="text-end"><p>${sale.timestamp}</p></td>
-              </tr>
-
-            `
-                )
-                .join("");
-
-              $("#sales-table-body").html(tableRows);
-            }
-          }).fail(function () {
-            $("#sales-table-body").html(
-              '<tr><td colspan="4" class="text-center">No Data Results</td></tr>'
-            );
-          });
-        }
-
-        // Initial fetch
-        fetchSales();
-
-        // Search by ID
-        $("#search-input").on("keyup", function () {
-          page = 1;
-          fetchSales();
-        });
-
-        // Sorting
-        $(".sortable").on("click", function () {
-          sortBy = $(this).data("sort");
-          order = order === "asc" ? "desc" : "asc";
-          fetchSales();
-        });
-
-        // Pagination
-        $("#prev-page").on("click", function () {
-          if (page > 1) {
-            page--;
-            fetchSales();
-          }
-        });
-
-        $("#next-page").on("click", function () {
-          page++;
-          fetchSales();
-        });
-
-        // Per Page Selection
-        $("#per-page").on("change", function () {
-          perPage = $(this).val();
-          page = 1; // Reset to page 1
-          fetchSales();
-        });
-      });
-    </script>
+    <script src="{{ url_for('static', filename='js/get_sales_all.js') }}"></script>
   </body>
 </html>
