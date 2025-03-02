@@ -1,52 +1,169 @@
-{
-  "budget_requests": {
-    "request_id_12345": {
-      "reference_number": "REF12345",
-      "requested_by": "John Doe",
-      "requested_department": "IT",
-      "requested_contact": "+123456789",
-      "requested_email": "johndoe@example.com",
-      "date_of_request": "2025-02-26",
-      "budget_details": [
-        {
-          "expense_category": "Equipment",
-          "amount": 1000,
-          "description": "New laptop purchase"
-        },
-        {
-          "expense_category": "Software",
-          "amount": 500,
-          "description": "Annual software subscription"
-        }
-      ],
-      "status": "approved",
-      "approval_details": {
-        "approved_by": "Jane Smith",
-        "date_of_approval": "2025-02-27",
-        "department": "Finance",
-        "contact_number": "+987654321"
+[
+  {
+    "reference_number": "REF12345",
+    "requested_by": "Juan Dela Cruz",
+    "department": "IT",
+    "contact": "+639123456789",
+    "email": "juan@example.com",
+    "date_of_request": "2025-02-26",
+    "budget_details": [
+      {
+        "category": "Equipment",
+        "amount": 1000,
+        "description": "New laptop purchase"
+      },
+      {
+        "category": "Software",
+        "amount": 500,
+        "description": "Annual software subscription"
       }
-    },
-    "request_id_67890": {
-      "reference_number": "REF67890",
-      "requested_by": "Alice Brown",
-      "requested_department": "HR",
-      "requested_contact": "+1122334455",
-      "requested_email": "alice@example.com",
-      "date_of_request": "2025-02-25",
-      "budget_details": [
-        {
-          "expense_category": "Training",
-          "amount": 2000,
-          "description": "Employee workshop"
-        }
-      ],
-      "status": "declined",
-      "decline_details": {
-        "declined_by": "Mark Wilson",
-        "date_of_decline": "2025-02-26",
-        "reason": "Budget constraints"
+    ],
+    "status": "approved",
+    "approval": {
+      "approved_by": "Maria Santos",
+      "date": "2025-02-27",
+      "department": "Finance",
+      "contact": "+639987654321"
+    }
+  },
+  {
+    "reference_number": "REF67890",
+    "requested_by": "Ana Reyes",
+    "department": "HR",
+    "contact": "+6391122334455",
+    "email": "ana@example.com",
+    "date_of_request": "2025-02-25",
+    "budget_details": [
+      {
+        "category": "Training",
+        "amount": 2000,
+        "description": "Employee workshop"
       }
+    ],
+    "status": "declined",
+    "decline": {
+      "declined_by": "Mark Villanueva",
+      "date": "2025-02-26",
+      "reason": "Budget constraints"
+    }
+  },
+  {
+    "reference_number": "REF24680",
+    "requested_by": "Miguel Cruz",
+    "department": "Marketing",
+    "contact": "+639123443211",
+    "email": "miguel@example.com",
+    "date_of_request": "2025-02-24",
+    "budget_details": [
+      {
+        "category": "Advertising",
+        "amount": 5000,
+        "description": "Social media campaign"
+      }
+    ],
+    "status": "approved",
+    "approval": {
+      "approved_by": "Sarah Dizon",
+      "date": "2025-02-25",
+      "department": "Finance",
+      "contact": "+6395566778899"
+    }
+  },
+  {
+    "reference_number": "REF13579",
+    "requested_by": "Lara Mendoza",
+    "department": "Operations",
+    "contact": "+6399988776655",
+    "email": "lara@example.com",
+    "date_of_request": "2025-02-23",
+    "budget_details": [
+      {
+        "category": "Maintenance",
+        "amount": 1200,
+        "description": "Office equipment repairs"
+      }
+    ],
+    "status": "pending"
+  },
+  {
+    "reference_number": "REF11223",
+    "requested_by": "David Ramos",
+    "department": "Finance",
+    "contact": "+6396655443322",
+    "email": "david@example.com",
+    "date_of_request": "2025-02-22",
+    "budget_details": [
+      {
+        "category": "Consulting",
+        "amount": 800,
+        "description": "External audit services"
+      }
+    ],
+    "status": "approved",
+    "approval": {
+      "approved_by": "Emma Castillo",
+      "date": "2025-02-23",
+      "department": "Management",
+      "contact": "+6394433221100"
+    }
+  },
+  {
+    "reference_number": "REF44556",
+    "requested_by": "Sophia Aquino",
+    "department": "Legal",
+    "contact": "+6393322114455",
+    "email": "sophia@example.com",
+    "date_of_request": "2025-02-21",
+    "budget_details": [
+      {
+        "category": "Legal Fees",
+        "amount": 2500,
+        "description": "Contract review"
+      }
+    ],
+    "status": "declined",
+    "decline": {
+      "declined_by": "Roberto Fernandez",
+      "date": "2025-02-22",
+      "reason": "Unjustified expense"
+    }
+  },
+  {
+    "reference_number": "REF77889",
+    "requested_by": "James Navarro",
+    "department": "Engineering",
+    "contact": "+6398877665544",
+    "email": "james@example.com",
+    "date_of_request": "2025-02-20",
+    "budget_details": [
+      {
+        "category": "R&D",
+        "amount": 10000,
+        "description": "Prototype development"
+      }
+    ],
+    "status": "pending"
+  },
+  {
+    "reference_number": "REF99001",
+    "requested_by": "Emma Villanueva",
+    "department": "Sales",
+    "contact": "+6391100223344",
+    "email": "emma@example.com",
+    "date_of_request": "2025-02-19",
+    "budget_details": [
+      {
+        "category": "Travel",
+        "amount": 3000,
+        "description": "Business trip to clients"
+      }
+    ],
+    "status": "approved",
+    "approval": {
+      "approved_by": "Nancy Reyes",
+      "date": "2025-02-20",
+      "department": "Management",
+      "contact": "+6396677889900"
     }
   }
-}
+]

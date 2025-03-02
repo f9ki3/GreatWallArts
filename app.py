@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 import requests
 import firebase_admin
+from datetime import datetime
 from firebase_admin import credentials, db
 
 # Initialize Firebase
@@ -188,6 +189,117 @@ def delete_sale(sale_id):
         "status": "success",
         "message": f"Sale with ID {sale_id} has been deleted."
     })
+
+# How to use
+# GET /api/get-logistics
+# GET /api/get-logistics?start_date=2024-01-01&end_date=2024-01-31
+# GET /api/get-logistics?sort=desc
+# GET /api/get-logistics?invoice_id=1001
+# GET /api/get-logistics?page=2&per_page=10
+
+@app.route('/api/get-logistics', methods=['GET'])
+def get_logistics():
+    logistics_ref = db.reference("logistics")
+    logistics_data = logistics_ref.get()
+
+    if not logistics_data:
+        return jsonify({"message": "No logistics data found"}), 404
+
+    # Convert dictionary to list for sorting, pagination, and searching
+    logistics_list = list(logistics_data.values())
+
+    # Get query parameters
+    invoice_id = request.args.get('invoice_id')
+    sort_order = request.args.get('sort', 'asc')  # Default to ascending
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 5, type=int)  # Default 5 per page
+
+    # Search by invoice_id
+    if invoice_id:
+        logistics_list = [item for item in logistics_list if str(item['invoice']['invoice_id']) == invoice_id]
+
+    # Sort data by invoice_id
+    logistics_list.sort(key=lambda x: x['invoice']['invoice_id'], reverse=(sort_order == 'desc'))
+
+    # Pagination
+    total_items = len(logistics_list)
+    start = (page - 1) * per_page
+    end = start + per_page
+    paginated_data = logistics_list[start:end]
+
+    return jsonify({
+        "total_items": total_items,
+        "page": page,
+        "per_page": per_page,
+        "total_pages": (total_items + per_page - 1) // per_page,  # Compute total pages
+        "data": paginated_data
+    }), 200
+
+@app.route('/api/get-logistics-reports', methods=['GET'])
+def get_logistics_reports():
+    logistics_ref = db.reference("logistics")
+    logistics_data = logistics_ref.get()
+
+    if not logistics_data:
+        return jsonify({"message": "No logistics data found"}), 404
+
+    # Convert dictionary to list
+    logistics_list = list(logistics_data.values())
+
+    # Get query parameters
+    start_date = request.args.get('start_date')
+    end_date = request.args.get('end_date')
+
+    if not start_date or not end_date:
+        return jsonify({"error": "Missing required parameters: start_date and end_date"}), 400
+
+    try:
+        start_dt = datetime.strptime(start_date.strip(), "%Y-%m-%d")
+        end_dt = datetime.strptime(end_date.strip(), "%Y-%m-%d")
+    except ValueError:
+        return jsonify({"error": "Invalid date format. Use YYYY-MM-DD"}), 400
+
+    if start_dt > end_dt:
+        return jsonify({"error": "start_date cannot be greater than end_date"}), 400
+
+    # Filter invoices by date range
+    filtered_logistics = []
+    for item in logistics_list:
+        invoice = item.get('invoice', {})
+        created_at = invoice.get('created_at')
+        if created_at:
+            try:
+                invoice_date = datetime.strptime(created_at, "%Y-%m-%d")
+                if start_dt <= invoice_date <= end_dt:
+                    filtered_logistics.append(item)
+            except ValueError:
+                continue  # Skip records with invalid dates
+
+    if not filtered_logistics:
+        return jsonify({"message": "No logistics data found for the given date range."}), 404
+
+    # Generate summary
+    total_invoices = len(filtered_logistics)
+    total_amount = sum(float(item.get('invoice', {}).get('total_amount', 0)) for item in filtered_logistics)
+
+    status_counts = {}
+    for item in filtered_logistics:
+        status = item.get('invoice', {}).get('status', 'Unknown')  # Fix the status extraction
+        status_counts[status] = status_counts.get(status, 0) + 1
+
+
+    summary_report = {
+        "start_date": start_date,
+        "end_date": end_date,
+        "total_invoices": total_invoices,
+        "total_amount": total_amount,
+        "status_summary": status_counts
+    }
+
+    return jsonify({
+        "summary_report": summary_report,
+        "invoices": filtered_logistics
+    }), 200
 
 
 if __name__ == "__main__":
