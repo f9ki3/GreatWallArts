@@ -12,6 +12,25 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/sales_table.css') }}"
     />
+    <style>
+      .header-print {
+        display: none;
+      }
+      @media print {
+        .header-print {
+          display: block;
+        }
+        .gwa-sidebar {
+          display: none !important;
+        }
+        .btn-print {
+          display: none !important;
+        }
+        .go-back {
+          display: none !important;
+        }
+      }
+    </style>
     <title>Sales</title>
     {% include 'components/header.html' %}
   </head>
@@ -22,6 +41,28 @@
         {% include 'components/navigation.html' %}
         <div class="container mt-5">
           <div class="row align-items-center">
+            <div class="header-print">
+              <div class="d-flex">
+                <div class="d-flex" style="width: 15%">
+                  <img
+                    class="img-fluid me-2"
+                    src="{{ url_for('static', filename='img/gwoa_logo.png') }}"
+                    alt="Logo"
+                    style="width: 70px; height: 70px"
+                  />
+                </div>
+                <div style="width: 85%">
+                  <h6 class="fw-bolder m-0" style="font-size: 20px">
+                    GREAT WALL ARTS
+                  </h6>
+                  <p class="m-0 p-0">
+                    2F Unit 203 Solen Building C. Raymundo corner F. Legaspi,
+                    Maybunga Pasig 09175000318 / 02 87494031
+                  </p>
+                </div>
+              </div>
+              <hr />
+            </div>
             <div class="col-md-12 col-12">
               <div class="row">
                 <div class="col-12 col-md-8">
@@ -33,14 +74,13 @@
                 <div
                   class="col-12 col-md-4 d-flex flex-column align-items-md-end"
                 >
-                  <a href="/sales" class="text-md-end">Go Back</a>
+                  <a href="/sales" class="text-md-end go-back">Go Back</a>
                   <p class="text-muted mt-3 text-md-end">
                     Transaction Date: <span id="timestamp"></span>
                   </p>
                 </div>
               </div>
             </div>
-            <hr />
           </div>
 
           <!-- Sales Table -->
@@ -49,9 +89,9 @@
               <table class="table table-striped">
                 <thead>
                   <tr>
-                    <th>Product Name</th>
-                    <th>Regular Price (₱)</th>
-                    <th>Sale Price (₱)</th>
+                    <th style="width: 55%"><p>Product Name</p></th>
+                    <th style="width: 25%"><p>Regular Price (₱)</p></th>
+                    <th style="width: 20%"><p>Sale Price (₱)</p></th>
                   </tr>
                 </thead>
                 <tbody id="sales-table-body"></tbody>
@@ -77,7 +117,10 @@
                 <p class="text-muted pb-1 m-0">Earnings:</p>
                 <span id="earnings" class="text-muted pb-1 m-0"></span>
               </div>
-              <button class="btn btn-warning w-100 mt-3">
+              <button
+                onclick="print()"
+                class="btn btn-warning btn-print w-100 mt-3"
+              >
                 <i class="bi bi-printer"></i> Print
               </button>
             </div>

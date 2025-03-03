@@ -12,11 +12,12 @@ $(document).ready(function () {
       let salesHTML = "";
       salesData.sale.cart_items.forEach((item) => {
         salesHTML += `
-              <tr>
-                <td class="text-muted py-3">${item.product_name}</td>
-                <td class="text-muted py-3">₱${item.regular_price}</td>
-                <td class="text-muted py-3">₱${item.sale_price}</td>
-              </tr>
+             <tr>
+              <td class="text-muted py-3"><p>${item.product_name}</p></td>
+              <td class="text-muted py-3"><p>₱${item.regular_price}</p></td>
+              <td class="text-muted py-3"><p>₱${item.sale_price}</p></td>
+            </tr>
+
             `;
       });
 

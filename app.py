@@ -31,6 +31,12 @@ def sales():
         return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
     return render_template('pages/sales.html')  # Show dashboard if logged in
 
+@app.route('/logistics')
+def logistics():
+    if 'user' not in session:  # Check if user is logged in
+        return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
+    return render_template('pages/logistics.html')  # Show dashboard if logged in
+
 @app.route('/publish_job')
 def publish_job():
     if 'user' not in session:  # Check if user is logged in
@@ -53,6 +59,12 @@ def view_sales():
     if 'user' not in session:  # Check if user is logged in
         return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
     return render_template('pages/view_sales.html')  # Show dashboard if logged in
+
+@app.route('/view_logistics')
+def view_logistics():
+    if 'user' not in session:  # Check if user is logged in
+        return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
+    return render_template('pages/view_logistics.html')  # Show dashboard if logged in
 
 @app.route('/logout')
 def logout():
@@ -214,9 +226,15 @@ def get_logistics():
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 5, type=int)  # Default 5 per page
 
-    # Search by invoice_id
+    # Search by invoice_number, vendor_id, or po_id
     if invoice_id:
-        logistics_list = [item for item in logistics_list if str(item['invoice']['invoice_id']) == invoice_id]
+        logistics_list = [
+            item for item in logistics_list 
+            if str(item['invoice']['invoice_number']) == invoice_id
+            or str(item['invoice']['vendor_id']) == invoice_id
+            or str(item['invoice']['po_id']) == invoice_id
+        ]
+
 
     # Sort data by invoice_id
     logistics_list.sort(key=lambda x: x['invoice']['invoice_id'], reverse=(sort_order == 'desc'))
