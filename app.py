@@ -1,8 +1,9 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 import requests
 import firebase_admin
-from datetime import datetime
 from firebase_admin import credentials, db
+from datetime import datetime  # Ensure correct datetime import
+import uuid
 
 # Initialize Firebase
 # cred = credentials.Certificate("account_key.json")
@@ -31,6 +32,12 @@ def sales():
         return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
     return render_template('pages/sales.html')  # Show dashboard if logged in
 
+@app.route('/budget')
+def budget():
+    if 'user' not in session:  # Check if user is logged in
+        return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
+    return render_template('pages/budget.html')  # Show dashboard if logged in
+
 @app.route('/logistics')
 def logistics():
     if 'user' not in session:  # Check if user is logged in
@@ -48,17 +55,31 @@ def publish_job():
 def documentation():
     return render_template('pages/documentation.html')  # Show dashboard if logged in
 
+
 @app.route('/dashboard')
 def dashboard():
     if 'user' not in session:  # Check if user is logged in
         return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
     return render_template('pages/dashboard.html')  # Show dashboard if logged in
 
+@app.route('/create_budget')
+def create_budget():
+    if 'user' not in session:  # Check if user is logged in
+        return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
+    return render_template('pages/create_budget.html')  # Show dashboard if logged in
+
 @app.route('/view_sales')
 def view_sales():
     if 'user' not in session:  # Check if user is logged in
         return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
     return render_template('pages/view_sales.html')  # Show dashboard if logged in
+
+
+@app.route('/view_request')
+def view_request():
+    if 'user' not in session:  # Check if user is logged in
+        return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
+    return render_template('pages/view_request.html')  # Show dashboard if logged in
 
 @app.route('/view_logistics')
 def view_logistics():
@@ -98,7 +119,7 @@ def login():
         return jsonify({"error": "Failed to reach authentication server", "details": str(e)}), 500
     
 
-# How to use
+
 # GET /api/get-sales
 # GET /api/get-sales?sort_by=total_sum&order=asc | total_sum, earnings, or timestamp
 # GET /api/get-sales?page=2&per_page=3 | 
@@ -155,7 +176,24 @@ def get_sales():
         "sales": paginated_sales
     })
 
-
+#POST api/generate-sales
+# {
+#                 "timestamp": "2024-01-01 00:00:00",
+#                 "cart_items": [
+#                     {
+#                         "product_name": "ABRAHAM 2024 PLANNER WITH MAGNETIC LOCK",
+#                         "regular_price": 500.0,
+#                         "sale_price": 399.0
+#                     },
+#                     {
+#                         "product_name": "ELISHA 2 (CHEESEBOARD and WINE SET)",
+#                         "regular_price": 1299.0,
+#                         "sale_price": 999.0
+#                     }
+#                 ],
+#                 "total_sum": 1398.0,
+#                 "earnings": 401.0
+#             }
 @app.route('/api/generate-sales', methods=['POST'])
 def generate_sales():
 
@@ -253,6 +291,7 @@ def get_logistics():
         "data": paginated_data
     }), 200
 
+# api/get-logistics-reports?start_date=2024-01-01&end_date=2024-01-31
 @app.route('/api/get-logistics-reports', methods=['GET'])
 def get_logistics_reports():
     logistics_ref = db.reference("logistics")
@@ -319,6 +358,162 @@ def get_logistics_reports():
         "invoices": filtered_logistics
     }), 200
 
+@app.route('/api/get-budget', methods=['GET'])
+def get_budget():
+    # Get query parameters
+    page = request.args.get('page', default=1, type=int)
+    per_page = request.args.get('per_page', default=10, type=int)
+    reference_number = request.args.get('reference_number', default=None, type=str)
+    sort_by = request.args.get('sort_by', default="reference_number", type=str)
+    order = request.args.get('order', default="asc", type=str).lower()
+
+    # Reference to "budget" collection in Firebase
+    budget_ref = db.reference("budget")
+    budget_data = budget_ref.get()
+
+    if not budget_data:
+        return jsonify({"message": "No budget data found", "data": []}), 200
+
+    # Convert dictionary to list of budget records
+    budget_list = list(budget_data.values())
+
+    # If searching by reference_number
+    if reference_number:
+        filtered_data = [item for item in budget_list if item.get("reference_number") == reference_number]
+        return jsonify({
+            "search": reference_number,
+            "total_items": len(filtered_data),
+            "data": filtered_data
+        })
+
+    # Sort the data
+    valid_sort_fields = ["reference_number", "requested_by", "date_of_request", "department", "email", "status"]
+    if sort_by in valid_sort_fields:
+        budget_list = sorted(budget_list, key=lambda x: x.get(sort_by, ""), reverse=(order == "desc"))
+
+    # Pagination logic
+    total_items = len(budget_list)
+    total_pages = (total_items + per_page - 1) // per_page
+    start = (page - 1) * per_page
+    end = start + per_page
+    paginated_data = budget_list[start:end]
+
+    return jsonify({
+        "page": page,
+        "per_page": per_page,
+        "total_items": total_items,
+        "total_pages": total_pages,
+        "sort_by": sort_by,
+        "order": order,
+        "data": paginated_data
+    })
+
+# POST /api/request-budget
+# {
+#     "requested_by": "Juan Dela Cruz",
+#     "department": "IT",
+#     "email": "juan@example.com",
+#     "contact": "+639123456789",
+#     "budget_details": [
+#         {
+#             "amount": 1500,
+#             "category": "Software",
+#             "description": "Purchase of project management tool"
+#         },
+#         {
+#             "amount": 3000,
+#             "category": "Equipment",
+#             "description": "New workstation setup"
+#         }
+#     ]
+# }
+@app.route('/api/request-budget', methods=['POST'])
+def add_budget():
+    try:
+        # Parse JSON request body
+        data = request.get_json()
+
+        # Validate required fields
+        required_fields = ["requested_by", "department", "email", "contact", "budget_details"]
+        for field in required_fields:
+            if field not in data:
+                return jsonify({"error": f"'{field}' is required"}), 400
+
+        # Generate a unique reference number
+        reference_number = "REF" + str(uuid.uuid4().int)[:8]  # Generates a unique 8-digit reference
+
+        # Set current date as the date_of_request
+        date_of_request = datetime.now().strftime("%Y-%m-%d")  # ✅ Use datetime.now() instead
+
+        # Construct budget entry
+        budget_entry = {
+            "requested_by": data["requested_by"],
+            "department": data["department"],
+            "email": data["email"],
+            "contact": data["contact"],
+            "date_of_request": date_of_request,
+            "reference_number": reference_number,
+            "status": "pending",  # Default status
+            "budget_details": data["budget_details"]  # List of budget items
+        }
+
+        # Save to Firebase (generate unique key)
+        budget_ref = db.reference("budget")
+        new_budget = budget_ref.push(budget_entry)
+
+        return jsonify({
+            "message": "Budget request added successfully",
+            "id": new_budget.key,
+            "reference_number": reference_number
+        }), 201
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+#  GET /api/get-budget-report?start_date=2025-02-20&end_date=2025-02-27
+@app.route('/api/get-budget-report', methods=['GET'])
+def get_budget_report():
+    try:
+        # Get start and end dates from query parameters
+        start_date = request.args.get('start_date')
+        end_date = request.args.get('end_date')
+
+        # Validate if both start and end dates are provided
+        if not start_date or not end_date:
+            return jsonify({"error": "Both 'start_date' and 'end_date' are required"}), 400
+
+        # Convert string dates to datetime objects
+        try:
+            start_date_obj = datetime.datetime.strptime(start_date, "%Y-%m-%d")
+            end_date_obj = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+        except ValueError:
+            return jsonify({"error": "Invalid date format. Use YYYY-MM-DD"}), 400
+
+        # Fetch all budget data
+        budget_ref = db.reference("budget")
+        all_budgets = budget_ref.get()
+
+        if not all_budgets:
+            return jsonify({"message": "No budget records found"}), 200
+
+        # Filter budgets within the date range
+        filtered_budgets = {}
+        for key, budget in all_budgets.items():
+            budget_date_str = budget.get("date_of_request", "")
+            
+            if budget_date_str:
+                try:
+                    budget_date = datetime.datetime.strptime(budget_date_str, "%Y-%m-%d")
+                    if start_date_obj <= budget_date <= end_date_obj:
+                        filtered_budgets[key] = budget
+                except ValueError:
+                    continue  # Skip if date format is incorrect
+
+        return jsonify(filtered_budgets), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")

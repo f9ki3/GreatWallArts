@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='img/gwoa_logo.png') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/sales_table.css') }}"
+    />
+    <title>Create Budget</title>
+    {% include 'components/header.html' %}
+    <style>
+      .sortable:hover {
+        cursor: pointer;
+        text-decoration: underline;
+      }
+      .pagination-controls {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+      .per-page-select {
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="d-flex">
+      {% include 'components/navbar.html' %}
+      <div class="w-100">
+        {% include 'components/navigation.html' %}
+        <div class="container mt-5">
+          <div class="row align-items-center">
+            <div class="col-md-10 col-12">
+              <h1 class="fw-bolder">Create Budget Plan</h1>
+              <p class="text-muted">
+                You can create an allocated budget request for the department.
+              </p>
+            </div>
+            <div class="col-12 col-md-2">
+              <button
+                class="btn border w-100"
+                data-bs-toggle="modal"
+                data-bs-target="#insert-budget"
+              >
+                <i class="bi bi-plus-circle"></i>
+                Insert Budget
+              </button>
+              <!-- Modal -->
+              <div
+                class="modal fade"
+                id="insert-budget"
+                tabindex="-1"
+                aria-labelledby="exampleModalLabel"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">
+                        Insert allocated budget
+                      </h1>
+                      <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                      ></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="mb-3">
+                        <label for="amount" class="form-label">Amount</label>
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="amount"
+                          name="amount"
+                          placeholder="Enter amount"
+                        />
+                      </div>
+                      <div class="mb-3">
+                        <label for="category" class="form-label"
+                          >Category</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="category"
+                          name="category"
+                          placeholder="Enter category for example transportation, tquipment, etc."
+                        />
+                      </div>
+                      <div class="mb-3">
+                        <label for="description" class="form-label"
+                          >Description</label
+                        >
+                        <textarea
+                          class="form-control"
+                          id="description"
+                          name="description"
+                          rows="3"
+                          placeholder="Enter description"
+                        ></textarea>
+                      </div>
+                    </div>
+
+                    <div class="modal-footer">
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                      >
+                        Close
+                      </button>
+                      <button type="button" class="btn btn-warning">
+                        Insert budget
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <form>
+            <div class="p-4 border rounded-4 mb-3">
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="requested_by" class="form-label"
+                    >Requested By</label
+                  >
+                  <input
+                    placeholder="Enter the name of person who request"
+                    type="text"
+                    class="form-control"
+                    id="requested_by"
+                    name="requested_by"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="date_of_request" class="form-label"
+                    >Date of Request</label
+                  >
+                  <input
+                    disabled
+                    type="date"
+                    class="form-control"
+                    id="date_of_request"
+                    name="date_of_request"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label for="department" class="form-label">Department</label>
+                  <select
+                    class="form-control"
+                    id="department"
+                    name="department"
+                    required
+                  >
+                    <option value="" disabled selected>
+                      Select Department
+                    </option>
+                    <option value="Core 1">Core 1</option>
+                    <option value="Core 2">Core 2</option>
+                    <option value="Finance">Finance</option>
+                    <option value="HR1">HR1</option>
+                    <option value="HR2">HR2</option>
+                    <option value="HR3">HR3</option>
+                    <option value="HR4">HR4</option>
+                    <option value="HR5">HR5</option>
+                    <option value="Logistic 1">Logistic 1</option>
+                    <option value="Logistic 2">Logistic 2</option>
+                  </select>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="email" class="form-label">Email</label>
+                  <input
+                    placeholder="Enter email address"
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    name="email"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="border p-4 rounded-4 mb-3">
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th style="width: 20%">
+                        <p>Amount</p>
+                      </th>
+                      <th style="width: 30%">
+                        <p>Category</p>
+                      </th>
+                      <th style="width: 30%">
+                        <p>Description</p>
+                      </th>
+                      <th class="text-end" style="width: 30%">
+                        <p>Action</p>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody id="budget-table-body">
+                    <tr>
+                      <td colspan="10" class="text-center text-muted py-3">
+                        Empty please insert allocated budget.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="row g-3">
+              <div class="col-12 col-md-8"></div>
+              <div class="col-12 col-md-2">
+                <a href="/budget" class="btn w-100 btn-danger"> Cancel </a>
+              </div>
+              <div class="col-12 col-md-2">
+                <button
+                  disabled
+                  type="submit"
+                  id="request_budget"
+                  class="btn w-100 btn-warning"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% include 'components/footer.html' %}
+
+    <script src="{{ url_for('static', filename='js/get_budget.js') }}"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        let today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+        document.getElementById("date_of_request").value = today; // Set value of input field
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        let budgetData = JSON.parse(localStorage.getItem("budgetData")) || [];
+        const budgetTableBody = document.getElementById("budget-table-body");
+
+        function renderBudgetTable() {
+          budgetTableBody.innerHTML = "";
+          if (budgetData.length === 0) {
+            budgetTableBody.innerHTML = `
+        <tr>
+          <td colspan="4" class="text-center text-muted py-3">
+            Empty, please insert allocated budget.
+          </td>
+        </tr>`;
+          } else {
+            budgetData.forEach((item, index) => {
+              const row = document.createElement("tr");
+              row.innerHTML = `
+          <td>${item.amount}</td>
+          <td>${item.category}</td>
+          <td>${item.description}</td>
+          <td class="text-end">
+            <button class="btn btn-sm" onclick="deleteBudget(${index})"><i class="bi bi-trash"></i></button>
+          </td>
+        `;
+              budgetTableBody.appendChild(row);
+            });
+          }
+          localStorage.setItem("budgetData", JSON.stringify(budgetData));
+        }
+
+        document
+          .querySelector(".btn-warning")
+          .addEventListener("click", function () {
+            const amount = document.getElementById("amount").value.trim();
+            const category = document.getElementById("category").value.trim();
+            const description = document
+              .getElementById("description")
+              .value.trim();
+
+            if (!amount || !category || !description) {
+              alert("Please fill in all fields");
+              return;
+            }
+
+            budgetData.push({ amount, category, description });
+            renderBudgetTable();
+            document.getElementById("amount").value = "";
+            document.getElementById("category").value = "";
+            document.getElementById("description").value = "";
+            document.getElementById("insert-budget");
+          });
+
+        window.deleteBudget = function (index) {
+          budgetData.splice(index, 1);
+          renderBudgetTable();
+        };
+
+        renderBudgetTable();
+      });
+    </script>
+  </body>
+</html>

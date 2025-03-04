@@ -26,12 +26,12 @@ $(document).ready(function () {
 
         // Update Status Badge
         $(".status")
-          .removeClass("bg-warning bg-success bg-danger")
+          .removeClass("bg-warning bg-success bg-danger text-light text-dark")
           .addClass(
             invoiceData.status === "Paid"
               ? "bg-success text-light"
               : invoiceData.status === "Pending"
-              ? "bg-warning"
+              ? "bg-warning text-light"
               : "bg-danger text-light"
           );
 
