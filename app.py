@@ -33,6 +33,12 @@ def sales():
         return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
     return render_template('pages/sales.html')  # Show dashboard if logged in
 
+@app.route('/general_ledger')
+def general_ledger():
+    if 'user' not in session:  # Check if user is logged in
+        return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
+    return render_template('pages/general_ledger.html')  # Show dashboard if logged in
+
 @app.route('/budget')
 def budget():
     if 'user' not in session:  # Check if user is logged in
@@ -582,6 +588,61 @@ def get_budget_report():
         "summary_report": summary_report,
         "budgets": budget_list
     })
+
+
+
+# How to use
+@app.route('/api/get-accounts', methods=['GET'])
+def get_accounts():
+    """Fetch accounts from the general ledger with optional sorting, pagination, filtering, and search."""
+    
+    accounts_ref = db.reference("general_ledger")
+    accounts_data = accounts_ref.get()
+
+    if not accounts_data:
+        return jsonify({"message": "No accounts found"}), 404
+
+    # Convert Firebase dict data into a list
+    accounts_list = [{"id": key, **value} for key, value in accounts_data.items()]
+
+    # Sorting (default is ascending, 'desc' for descending)
+    sort_order = request.args.get('sort', 'asc')
+    if sort_order == 'desc':
+        accounts_list = sorted(accounts_list, key=lambda x: x['date'], reverse=True)
+    else:
+        accounts_list = sorted(accounts_list, key=lambda x: x['date'])
+
+    # Filtering by reference
+    reference = request.args.get('reference')
+    if reference:
+        accounts_list = [acc for acc in accounts_list if acc["reference"] == reference]
+
+    # Search functionality (search by account name, description, or reference)
+    search_query = request.args.get('search', '').lower()
+    if search_query:
+        accounts_list = [
+            acc for acc in accounts_list
+            if search_query in acc["account"].lower()
+            or search_query in acc["description"].lower()
+            or search_query in acc["reference"].lower()
+        ]
+
+    # Pagination
+    page = int(request.args.get('page', 1))
+    per_page = int(request.args.get('per_page', 10))
+    total_records = len(accounts_list)
+    start = (page - 1) * per_page
+    end = start + per_page
+    paginated_accounts = accounts_list[start:end]
+
+    return jsonify({
+        "total_records": total_records,
+        "current_page": page,
+        "per_page": per_page,
+        "total_pages": (total_records + per_page - 1) // per_page,  # Calculate total pages
+        "data": paginated_accounts
+    })
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")

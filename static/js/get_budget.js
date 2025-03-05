@@ -11,7 +11,7 @@ $(document).ready(function () {
       case "approved":
         return '<span class="badge bg-success">Approved</span>';
       default:
-        return '<span class="badge bg-danger">Rejected</span>';
+        return '<span class="badge bg-danger">Declined</span>';
     }
   }
 
