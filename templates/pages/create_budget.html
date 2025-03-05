@@ -128,122 +128,118 @@
             </div>
           </div>
 
-          <form>
-            <div class="p-4 border rounded-4 mb-3">
-              <div class="row mb-3">
-                <div class="col-md-6">
-                  <label for="requested_by" class="form-label"
-                    >Requested By</label
-                  >
-                  <input
-                    placeholder="Enter the name of person who request"
-                    type="text"
-                    class="form-control"
-                    id="requested_by"
-                    name="requested_by"
-                    required
-                  />
-                </div>
-                <div class="col-md-6">
-                  <label for="date_of_request" class="form-label"
-                    >Date of Request</label
-                  >
-                  <input
-                    disabled
-                    type="date"
-                    class="form-control"
-                    id="date_of_request"
-                    name="date_of_request"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div class="row mb-3">
-                <div class="col-md-6">
-                  <label for="department" class="form-label">Department</label>
-                  <select
-                    class="form-control"
-                    id="department"
-                    name="department"
-                    required
-                  >
-                    <option value="" disabled selected>
-                      Select Department
-                    </option>
-                    <option value="Core 1">Core 1</option>
-                    <option value="Core 2">Core 2</option>
-                    <option value="Finance">Finance</option>
-                    <option value="HR1">HR1</option>
-                    <option value="HR2">HR2</option>
-                    <option value="HR3">HR3</option>
-                    <option value="HR4">HR4</option>
-                    <option value="HR5">HR5</option>
-                    <option value="Logistic 1">Logistic 1</option>
-                    <option value="Logistic 2">Logistic 2</option>
-                  </select>
-                </div>
-
-                <div class="col-md-6">
-                  <label for="email" class="form-label">Email</label>
-                  <input
-                    placeholder="Enter email address"
-                    type="email"
-                    class="form-control"
-                    id="email"
-                    name="email"
-                    required
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div class="border p-4 rounded-4 mb-3">
-              <div class="table-responsive">
-                <table class="table table-striped">
-                  <thead>
-                    <tr>
-                      <th style="width: 20%">
-                        <p>Amount</p>
-                      </th>
-                      <th style="width: 30%">
-                        <p>Category</p>
-                      </th>
-                      <th style="width: 30%">
-                        <p>Description</p>
-                      </th>
-                      <th class="text-end" style="width: 30%">
-                        <p>Action</p>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody id="budget-table-body">
-                    <tr>
-                      <td colspan="10" class="text-center text-muted py-3">
-                        Empty please insert allocated budget.
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="row g-3">
-              <div class="col-12 col-md-8"></div>
-              <div class="col-12 col-md-2">
-                <a href="/budget" class="btn w-100 btn-danger"> Cancel </a>
-              </div>
-              <div class="col-12 col-md-2">
-                <button
-                  disabled
-                  type="submit"
-                  id="request_budget"
-                  class="btn w-100 btn-warning"
+          <div class="p-4 border rounded-4 mb-3">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="requested_by" class="form-label"
+                  >Requested By</label
                 >
-                  Save
-                </button>
+                <input
+                  placeholder="Enter the name of person who request"
+                  type="text"
+                  class="form-control"
+                  id="requested_by"
+                  name="requested_by"
+                  required
+                />
+              </div>
+              <div class="col-md-6">
+                <label for="date_of_request" class="form-label"
+                  >Date of Request</label
+                >
+                <input
+                  disabled
+                  type="date"
+                  class="form-control"
+                  id="date_of_request"
+                  name="date_of_request"
+                  required
+                />
               </div>
             </div>
-          </form>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="department" class="form-label">Department</label>
+                <select
+                  class="form-control"
+                  id="department"
+                  name="department"
+                  required
+                >
+                  <option value="" disabled selected>Select Department</option>
+                  <option value="Core 1">Core 1</option>
+                  <option value="Core 2">Core 2</option>
+                  <option value="Finance">Finance</option>
+                  <option value="HR1">HR1</option>
+                  <option value="HR2">HR2</option>
+                  <option value="HR3">HR3</option>
+                  <option value="HR4">HR4</option>
+                  <option value="HR5">HR5</option>
+                  <option value="Logistic 1">Logistic 1</option>
+                  <option value="Logistic 2">Logistic 2</option>
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <label for="email" class="form-label">Email</label>
+                <input
+                  placeholder="Enter email address"
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  name="email"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="border p-4 rounded-4 mb-3">
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th style="width: 20%">
+                      <p>Amount</p>
+                    </th>
+                    <th style="width: 30%">
+                      <p>Category</p>
+                    </th>
+                    <th style="width: 30%">
+                      <p>Description</p>
+                    </th>
+                    <th class="text-end" style="width: 30%">
+                      <p>Action</p>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody id="budget-table-body">
+                  <tr>
+                    <td colspan="10" class="text-center text-muted py-3">
+                      Empty please insert allocated budget.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="row g-3">
+            <div class="col-12 col-md-8"></div>
+            <div class="col-12 col-md-2">
+              <a href="/budget" class="btn w-100 btn-danger"> Cancel </a>
+            </div>
+            <div class="col-12 col-md-2">
+              <button
+                disabled
+                id="requested_budget"
+                class="btn w-100 btn-warning"
+                onclick="save_budget()"
+              >
+                Save
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -312,10 +308,110 @@
         window.deleteBudget = function (index) {
           budgetData.splice(index, 1);
           renderBudgetTable();
+          toggleButtonState();
         };
 
         renderBudgetTable();
       });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const requestedBy = document.getElementById("requested_by");
+        const dateOfRequest = document.getElementById("date_of_request");
+        const department = document.getElementById("department");
+        const email = document.getElementById("email");
+        const requestedBudgetBtn = document.getElementById("requested_budget");
+
+        function getBudgetData() {
+          try {
+            const budget = localStorage.getItem("budgetData");
+            return budget ? JSON.parse(budget) : [];
+          } catch (error) {
+            console.error("Error parsing budgetData:", error);
+            return [];
+          }
+        }
+
+        function toggleButtonState() {
+          const budgetData = getBudgetData(); // Always get the latest data from localStorage
+
+          if (
+            requestedBy.value.trim() !== "" &&
+            dateOfRequest.value !== "" &&
+            department.value !== "" &&
+            email.value.trim() !== "" &&
+            Array.isArray(budgetData) &&
+            budgetData.length > 0
+          ) {
+            requestedBudgetBtn.removeAttribute("disabled");
+          } else {
+            requestedBudgetBtn.setAttribute("disabled", "true");
+          }
+        }
+
+        // Attach event listeners to track input changes in real time
+        [requestedBy, dateOfRequest, department, email].forEach((el) => {
+          el.addEventListener("input", toggleButtonState);
+          el.addEventListener("change", toggleButtonState);
+        });
+
+        // Monitor `localStorage` changes across tabs/windows in real time
+        window.addEventListener("storage", function (event) {
+          if (event.key === "budgetData") {
+            toggleButtonState();
+          }
+        });
+
+        // Check localStorage every second to ensure real-time updates
+        setInterval(toggleButtonState, 1000);
+
+        // Initialize state on page load
+        toggleButtonState();
+      });
+    </script>
+
+    <script>
+      function save_budget() {
+        const s_requestedBy = $("#requested_by").val() || null;
+        const s_dateOfRequest = $("#date_of_request").val() || null;
+        const s_department = $("#department").val() || null;
+        const s_email = $("#email").val() || null;
+        const s_budget = localStorage.getItem("budgetData");
+
+        const requestData = {
+          requested_by: s_requestedBy,
+          contact: null,
+          department: s_department,
+          email: s_email,
+          budget_details: s_budget ? JSON.parse(s_budget) : null, // Safely parse or set to null if empty
+        };
+
+        console.log(requestData);
+
+        $.ajax({
+          url: "api/request-budget",
+          method: "POST",
+          contentType: "application/json",
+          data: JSON.stringify(requestData), // Send data as JSON
+          success: function (response) {
+            console.log("Budget request saved:", response);
+            Toastify({
+              text: "Budget saved successfully!",
+              duration: 3000,
+              gravity: "top",
+              position: "right",
+              backgroundColor: "#4CAF50",
+            }).showToast();
+            localStorage.clear();
+            setTimeout(() => {
+              window.location.href = "/budget";
+            }, 3000);
+          },
+          error: function (xhr, status, error) {
+            console.error("Error saving budget request:", error);
+          },
+        });
+      }
     </script>
   </body>
 </html>

@@ -66,14 +66,22 @@
 
           <div>
             <div>
-              <div class="row">
+              <div class="row g-2">
                 <div class="col-12 col-md-8">
                   <h1 class="fw-bolder">Requested Budget</h1>
                 </div>
-                <div
-                  class="col-12 col-md-4 d-flex flex-column align-items-md-end"
-                >
-                  <a href="/budget" class="text-md-end go-back">Go Back</a>
+                <div class="col-md-2">
+                  <a
+                    href="/budget"
+                    class="btn w-100 btn-outline-secondary go-back"
+                    >Go Back</a
+                  >
+                </div>
+                <div class="col-md-1">
+                  <button class="btn w-100 btn-success go-back">Accept</button>
+                </div>
+                <div class="col-md-1">
+                  <button class="btn w-100 btn-danger go-back">Reject</button>
                 </div>
               </div>
             </div>
@@ -81,74 +89,34 @@
               <div class="row mb-3" style="font-size: 15px">
                 <div class="col-md-6">
                   <p class="p-0 m-0">
-                    Invoice Number: <span class="invoice-number"></span>
-                  </p>
-                  <p class="p-0 m-0">PO ID: <span class="po-id"></span></p>
-                  <p class="p-0 m-0">
-                    Vendor ID: <span class="vendor-id"></span>
+                    Reference Number: <span class="reference-number"></span>
                   </p>
                   <p class="p-0 m-0">
-                    Supplier: <span class="supplier"></span>
+                    Requested By: <span class="requested-by"></span>
                   </p>
                   <p class="p-0 m-0">
-                    Shipment Date: <span class="shipment-date"></span>
+                    Date of Request: <span class="date-of-request"></span>
                   </p>
                 </div>
                 <div class="col-md-6 text-md-end">
                   <p class="p-0 m-0">
-                    Created At: <span class="created-at"></span>
+                    Department: <span class="department"></span>
                   </p>
-                  <p class="p-0 m-0">
-                    Due Date: <span class="due-date"></span>
-                  </p>
-                  <p class="p-0 m-0">
-                    Delivery Date: <span class="delivery-date"></span>
-                  </p>
-                  <p class="p-0 m-0">
-                    Order Date: <span class="order-date"></span>
-                  </p>
-                  <p class="p-0 m-0">
-                    Status:
-                    <span class="badge status bg-warning text-dark"></span>
-                  </p>
+                  <p class="p-0 m-0">Email: <span class="email"></span></p>
+                  <p class="p-0 m-0">Status: <span class="status"></span></p>
                 </div>
               </div>
+
               <hr />
               <table class="table table-striped table-responsive">
                 <thead>
                   <tr>
-                    <th style="width: 15%"><p>Brand</p></th>
-                    <th style="width: 20%"><p>Name</p></th>
-                    <th style="width: 10%"><p>QTY</p></th>
-                    <th style="width: 20%"><p>Regular Price</p></th>
-                    <th style="width: 20%"><p>Sale Price</p></th>
-                    <th style="width: 20%"><p>Total Price</p></th>
+                    <th style="width: 15%"><p>Category</p></th>
+                    <th style="width: 20%"><p>Amount</p></th>
+                    <th style="width: 20%"><p>Description</p></th>
                   </tr>
                 </thead>
-                <tbody class="product-list"></tbody>
-              </table>
-
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th><p>Subtotal</p></th>
-                    <th><p>Tax Rate</p></th>
-                    <th><p>Tax Amount</p></th>
-                    <th><p>Discount</p></th>
-                    <th><p>Total Amount</p></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td style="width: 10%"><p class="subtotal"></p></td>
-                    <td style="width: 10%"><p class="tax-rate"></p></td>
-                    <td style="width: 10%"><p class="tax-amount"></p></td>
-                    <td style="width: 10%"><p class="discount"></p></td>
-                    <td style="width: 10%" class="fw-bold">
-                      <p class="total-amount"></p>
-                    </td>
-                  </tr>
-                </tbody>
+                <tbody id="budget-table-body"></tbody>
               </table>
             </div>
           </div>
@@ -168,9 +136,9 @@
       </div>
     </div>
     {% include 'components/footer.html' %}
-
+    <script></script>
     <!-- jQuery (Required) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ url_for('static', filename='js/view_logistics.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/view_requested.js') }}"></script>
   </body>
 </html>

@@ -1,8 +1,8 @@
 $(document).ready(function () {
   let page = 1;
   let perPage = $("#per-page").val();
-  let sortField = "reference_number";
-  let sortOrder = "asc";
+  let sortField = "date_of_request";
+  let sortOrder = "desc";
 
   function formatStatus(status) {
     switch (status.toLowerCase()) {

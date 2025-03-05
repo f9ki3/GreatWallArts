@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 import requests
 import firebase_admin
-from firebase_admin import credentials, db
+from firebase_admin import credentials, db, firestore
 from datetime import datetime  # Ensure correct datetime import
 import uuid
+
 
 # Initialize Firebase
 # cred = credentials.Certificate("account_key.json")
@@ -174,6 +175,52 @@ def get_sales():
         "per_page": per_page,
         "total_pages": (total_records + per_page - 1) // per_page,
         "sales": paginated_sales
+    })
+
+@app.route('/api/sales-reports', methods=['GET'])
+def get_sales_reports():
+    # Reference to the "sales" collection
+    sales_ref = db.reference("sales")
+    
+    # Fetch sales data
+    sales_data = sales_ref.get()
+    
+    if not sales_data:
+        return jsonify({"message": "No sales data found"}), 404
+    
+    # Convert dict to list for filtering
+    sales_list = [{"id": key, **value} for key, value in sales_data.items()]
+    
+    # Date filtering
+    start_date = request.args.get("start_date")
+    end_date = request.args.get("end_date")
+    
+    if start_date and end_date:
+        try:
+            start_date = datetime.strptime(start_date, "%Y-%m-%d")
+            end_date = datetime.strptime(end_date, "%Y-%m-%d")
+        except ValueError:
+            return jsonify({"error": "Invalid date format. Use YYYY-MM-DD."}), 400
+        
+        sales_list = [sale for sale in sales_list if start_date.date() <= datetime.strptime(sale["timestamp"], "%Y-%m-%d %H:%M:%S").date() <= end_date.date()]
+    
+    # Summary report calculation
+    total_sales_amount = sum(sale.get("total_sum", 0) for sale in sales_list)
+    total_sales_earnings = sum(sale.get("earnings", 0) for sale in sales_list)
+    total_invoices = len(sales_list)
+    
+    summary_report = {
+        "start_date": start_date.strftime("%Y-%m-%d") if start_date else None,
+        "end_date": end_date.strftime("%Y-%m-%d") if end_date else None,
+        "total_sales_amount": total_sales_amount,
+        "total_sales_earnings": total_sales_earnings,
+        "total_invoices": total_invoices
+    }
+    
+    # Response structure
+    return jsonify({
+        "summary_report": summary_report,
+        "sales invoices": sales_list
     })
 
 #POST api/generate-sales
@@ -364,8 +411,8 @@ def get_budget():
     page = request.args.get('page', default=1, type=int)
     per_page = request.args.get('per_page', default=10, type=int)
     reference_number = request.args.get('reference_number', default=None, type=str)
-    sort_by = request.args.get('sort_by', default="reference_number", type=str)
-    order = request.args.get('order', default="asc", type=str).lower()
+    sort_by = request.args.get('sort_by', default="date_of_request", type=str)
+    order = request.args.get('order', default="desc", type=str).lower()
 
     # Reference to "budget" collection in Firebase
     budget_ref = db.reference("budget")
@@ -469,51 +516,77 @@ def add_budget():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@app.route('/api/search-budget-status', methods=['POST'])  # Changed to POST since we are searching
+def search_budget_status():
+    # Parse JSON request body
+    data = request.get_json()
+    reference_number = data.get('reference_number')
 
+    if not reference_number:
+        return jsonify({'error': 'Missing reference_number'}), 400
 
-#  GET /api/get-budget-report?start_date=2025-02-20&end_date=2025-02-27
+    # Reference the specific budget entry in Firebase
+    budget_ref = db.reference(f'budget')
+    budget_data = budget_ref.get()
+
+    if not budget_data:
+        return jsonify({'error': 'Budget entry not found'}), 404
+
+    return jsonify({'message': 'Budget found', 'reference_number': reference_number, 'budget_data': budget_data}), 200
+
+        
+    
+from datetime import datetime
+from flask import Flask, request, jsonify
+import firebase_admin
+from firebase_admin import db
+
+app = Flask(__name__)
+
 @app.route('/api/get-budget-report', methods=['GET'])
 def get_budget_report():
-    try:
-        # Get start and end dates from query parameters
-        start_date = request.args.get('start_date')
-        end_date = request.args.get('end_date')
-
-        # Validate if both start and end dates are provided
-        if not start_date or not end_date:
-            return jsonify({"error": "Both 'start_date' and 'end_date' are required"}), 400
-
-        # Convert string dates to datetime objects
+    # Reference to the "budget" collection
+    budget_ref = db.reference("budget")
+    
+    # Fetch budget data
+    budget_data = budget_ref.get()
+    
+    if not budget_data:
+        return jsonify({"message": "No budget records found"}), 404
+    
+    # Convert dict to list for filtering
+    budget_list = [{"id": key, **value} for key, value in budget_data.items()]
+    
+    # Date filtering
+    start_date = request.args.get("start_date")
+    end_date = request.args.get("end_date")
+    
+    if start_date and end_date:
         try:
-            start_date_obj = datetime.datetime.strptime(start_date, "%Y-%m-%d")
-            end_date_obj = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+            start_date = datetime.strptime(start_date, "%Y-%m-%d")
+            end_date = datetime.strptime(end_date, "%Y-%m-%d")
         except ValueError:
-            return jsonify({"error": "Invalid date format. Use YYYY-MM-DD"}), 400
-
-        # Fetch all budget data
-        budget_ref = db.reference("budget")
-        all_budgets = budget_ref.get()
-
-        if not all_budgets:
-            return jsonify({"message": "No budget records found"}), 200
-
-        # Filter budgets within the date range
-        filtered_budgets = {}
-        for key, budget in all_budgets.items():
-            budget_date_str = budget.get("date_of_request", "")
-            
-            if budget_date_str:
-                try:
-                    budget_date = datetime.datetime.strptime(budget_date_str, "%Y-%m-%d")
-                    if start_date_obj <= budget_date <= end_date_obj:
-                        filtered_budgets[key] = budget
-                except ValueError:
-                    continue  # Skip if date format is incorrect
-
-        return jsonify(filtered_budgets), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+            return jsonify({"error": "Invalid date format. Use YYYY-MM-DD."}), 400
+        
+        budget_list = [budget for budget in budget_list if start_date.date() <= datetime.strptime(budget["date_of_request"], "%Y-%m-%d").date() <= end_date.date()]
+    
+    # Summary report calculation
+    total_budget_amount = sum(sum(detail.get("amount", 0) for detail in budget.get("budget_details", [])) for budget in budget_list)
+    total_requests = len(budget_list)
+    
+    summary_report = {
+        "start_date": start_date.strftime("%Y-%m-%d") if start_date else None,
+        "end_date": end_date.strftime("%Y-%m-%d") if end_date else None,
+        "total_budget_amount": total_budget_amount,
+        "total_requests": total_requests
+    }
+    
+    # Response structure
+    return jsonify({
+        "summary_report": summary_report,
+        "budgets": budget_list
+    })
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
