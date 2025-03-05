@@ -402,7 +402,7 @@ def get_logistics_reports():
 
     return jsonify({
         "summary_report": summary_report,
-        "invoices": filtered_logistics
+        "logistics invoices": filtered_logistics
     }), 200
 
 @app.route('/api/get-budget', methods=['GET'])
@@ -537,12 +537,7 @@ def search_budget_status():
 
         
     
-from datetime import datetime
-from flask import Flask, request, jsonify
-import firebase_admin
-from firebase_admin import db
-
-app = Flask(__name__)
+#  GET /api/get-budget-report?start_date=2025-02-20&end_date=2025-02-27
 
 @app.route('/api/get-budget-report', methods=['GET'])
 def get_budget_report():
