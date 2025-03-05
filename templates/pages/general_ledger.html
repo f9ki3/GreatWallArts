@@ -15,13 +15,6 @@
     <title>General Ledger</title>
     {% include 'components/header.html' %}
     <style>
-      tbody tr {
-        cursor: pointer;
-      }
-      .sortable:hover {
-        cursor: pointer;
-        text-decoration: underline;
-      }
       .pagination-controls {
         display: flex;
         align-items: center;
@@ -128,6 +121,64 @@
                       placeholder="Enter description"
                     ></textarea>
                   </div>
+                  <script>
+                    function create_account() {
+                      const account = $("#account").val();
+                      const credit = Number($("#credit").val()) || 0;
+                      const debit = Number($("#debit").val()) || 0;
+                      const description = $("#description").val();
+
+                      // Get the current date in YYYY-MM-DD format
+                      const date = new Date().toISOString().split("T")[0];
+
+                      // Generate a random reference number
+                      const reference =
+                        "REF" + Math.floor(Math.random() * 10000);
+
+                      const accountData = {
+                        account: account,
+                        credit: credit,
+                        debit: debit,
+                        description: description,
+                        date: date,
+                        reference: reference,
+                      };
+
+                      // Log the account details
+                      console.log(accountData);
+
+                      // Send the data via AJAX (jQuery)
+                      $.ajax({
+                        url: "/api/generate-accounts",
+                        method: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify(accountData),
+                        success: function (data) {
+                          // If the request was successful
+                          Toastify({
+                            text: data.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            backgroundColor: "#4CAF50",
+                          }).showToast();
+                          setTimeout(() => {
+                            window.location.reload();
+                          }, 2000);
+                        },
+                        error: function (xhr, status, error) {
+                          // Handle errors
+                          Toastify({
+                            text: "Error: " + error,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            backgroundColor: "#f44336",
+                          }).showToast();
+                        },
+                      });
+                    }
+                  </script>
                 </div>
                 <div class="modal-footer">
                   <button
@@ -139,6 +190,7 @@
                   </button>
                   <button
                     id="add_account_ledge"
+                    onclick="create_account()"
                     type="button"
                     class="btn btn-warning"
                     disabled
@@ -164,7 +216,7 @@
 
           <!-- Table -->
           <div class="table-responsive">
-            <table class="table table-striped table-hover">
+            <table class="table table-striped">
               <thead>
                 <tr>
                   <th style="width: 10%" class="sortable" data-sort="reference">

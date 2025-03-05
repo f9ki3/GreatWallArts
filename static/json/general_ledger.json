@@ -1,202 +1,162 @@
 [
   {
-    "date": "2025-03-01",
-    "account": "Logistic 1",
-    "debit": 5000.0,
-    "credit": 0.0,
-    "description": "Fuel expenses for delivery trucks",
-    "reference": "LOG1-20250301-001"
-  },
-  {
-    "date": "2025-03-01",
-    "account": "Logistic 2",
-    "debit": 2000.0,
-    "credit": 0.0,
-    "description": "Maintenance costs for fleet",
-    "reference": "LOG2-20250301-002"
-  },
-  {
-    "date": "2025-03-01",
-    "account": "HR",
-    "debit": 0.0,
-    "credit": 10000.0,
-    "description": "Salary payments for employees",
-    "reference": "HR-20250301-003"
-  },
-  {
-    "date": "2025-03-01",
-    "account": "Core 1",
-    "debit": 3000.0,
-    "credit": 0.0,
-    "description": "Procurement of raw materials",
-    "reference": "CORE1-20250301-004"
-  },
-  {
-    "date": "2025-03-01",
-    "account": "Finance",
-    "debit": 0.0,
-    "credit": 15000.0,
-    "description": "Revenue from client payments",
-    "reference": "FIN-20250301-005"
-  },
-  {
-    "date": "2025-03-02",
-    "account": "Logistic 1",
+    "date": "2025-03-05",
+    "account": "Art Supplies Expense",
     "debit": 4500.0,
     "credit": 0.0,
-    "description": "Vehicle insurance renewal",
-    "reference": "LOG1-20250302-006"
+    "description": "Purchase of high-quality brushes and paint for artwork",
+    "reference": "REF20250305-001"
   },
   {
-    "date": "2025-03-02",
-    "account": "Logistic 2",
-    "debit": 2500.0,
-    "credit": 0.0,
-    "description": "Tire replacement",
-    "reference": "LOG2-20250302-007"
-  },
-  {
-    "date": "2025-03-02",
-    "account": "HR",
-    "debit": 0.0,
-    "credit": 12000.0,
-    "description": "Employee bonuses",
-    "reference": "HR-20250302-008"
-  },
-  {
-    "date": "2025-03-02",
-    "account": "Core 1",
-    "debit": 3500.0,
-    "credit": 0.0,
-    "description": "Equipment maintenance",
-    "reference": "CORE1-20250302-009"
-  },
-  {
-    "date": "2025-03-02",
-    "account": "Finance",
-    "debit": 0.0,
-    "credit": 20000.0,
-    "description": "Investment income",
-    "reference": "FIN-20250302-010"
-  },
-  {
-    "date": "2025-03-03",
-    "account": "Logistic 1",
+    "date": "2025-03-05",
+    "account": "Gadget Manufacturing Expense",
     "debit": 3000.0,
     "credit": 0.0,
-    "description": "Warehouse rental",
-    "reference": "LOG1-20250303-011"
+    "description": "Acquisition of components for the next gadget release",
+    "reference": "REF20250305-002"
   },
   {
-    "date": "2025-03-03",
-    "account": "Logistic 2",
-    "debit": 2200.0,
-    "credit": 0.0,
-    "description": "Fuel expenses",
-    "reference": "LOG2-20250303-012"
-  },
-  {
-    "date": "2025-03-03",
-    "account": "HR",
+    "date": "2025-03-05",
+    "account": "Salaries Expense",
     "debit": 0.0,
-    "credit": 9500.0,
-    "description": "Overtime payments",
-    "reference": "HR-20250303-013"
+    "credit": 13000.0,
+    "description": "Salaries for art department and gadget engineers",
+    "reference": "REF20250305-003"
   },
   {
-    "date": "2025-03-03",
-    "account": "Core 1",
-    "debit": 2800.0,
+    "date": "2025-03-05",
+    "account": "Marketing Expense",
+    "debit": 5000.0,
     "credit": 0.0,
-    "description": "Safety equipment purchases",
-    "reference": "CORE1-20250303-014"
+    "description": "Advertising costs for upcoming art and gadget collection",
+    "reference": "REF20250305-004"
   },
   {
-    "date": "2025-03-03",
-    "account": "Finance",
-    "debit": 0.0,
-    "credit": 17000.0,
-    "description": "Loan repayment from clients",
-    "reference": "FIN-20250303-015"
-  },
-  {
-    "date": "2025-03-04",
-    "account": "Logistic 1",
-    "debit": 5200.0,
-    "credit": 0.0,
-    "description": "New delivery truck purchase",
-    "reference": "LOG1-20250304-016"
-  },
-  {
-    "date": "2025-03-04",
-    "account": "Logistic 2",
-    "debit": 2700.0,
-    "credit": 0.0,
-    "description": "GPS tracking system installation",
-    "reference": "LOG2-20250304-017"
-  },
-  {
-    "date": "2025-03-04",
-    "account": "HR",
-    "debit": 0.0,
-    "credit": 14000.0,
-    "description": "Employee training budget",
-    "reference": "HR-20250304-018"
-  },
-  {
-    "date": "2025-03-04",
-    "account": "Core 1",
-    "debit": 4200.0,
-    "credit": 0.0,
-    "description": "Machine spare parts",
-    "reference": "CORE1-20250304-019"
-  },
-  {
-    "date": "2025-03-04",
-    "account": "Finance",
+    "date": "2025-03-05",
+    "account": "Revenue from Gadget Sales",
     "debit": 0.0,
     "credit": 25000.0,
-    "description": "Shareholder investments",
-    "reference": "FIN-20250304-020"
+    "description": "Sales from newly launched gadget models",
+    "reference": "REF20250305-005"
   },
   {
     "date": "2025-03-05",
-    "account": "Logistic 1",
+    "account": "Art Installation Expenses",
+    "debit": 4000.0,
+    "credit": 0.0,
+    "description": "Costs associated with art exhibitions and installations",
+    "reference": "REF20250305-006"
+  },
+  {
+    "date": "2025-03-05",
+    "account": "Gadget Assembly Costs",
+    "debit": 2500.0,
+    "credit": 0.0,
+    "description": "Labor costs for assembling gadgets",
+    "reference": "REF20250305-007"
+  },
+  {
+    "date": "2025-03-05",
+    "account": "Packaging Expense",
     "debit": 1500.0,
     "credit": 0.0,
-    "description": "Fuel card top-up",
-    "reference": "LOG1-20250305-021"
+    "description": "Packaging materials for gadgets and artwork",
+    "reference": "REF20250305-008"
   },
   {
     "date": "2025-03-05",
-    "account": "Logistic 2",
-    "debit": 1900.0,
+    "account": "Legal Fees Expense",
+    "debit": 2000.0,
     "credit": 0.0,
-    "description": "Driver uniform purchase",
-    "reference": "LOG2-20250305-022"
+    "description": "Legal services for intellectual property rights protection",
+    "reference": "REF20250305-009"
   },
   {
     "date": "2025-03-05",
-    "account": "HR",
-    "debit": 0.0,
-    "credit": 11000.0,
-    "description": "Health benefits coverage",
-    "reference": "HR-20250305-023"
-  },
-  {
-    "date": "2025-03-05",
-    "account": "Core 1",
-    "debit": 3600.0,
+    "account": "Equipment Rental Expense",
+    "debit": 3500.0,
     "credit": 0.0,
-    "description": "Factory rent payment",
-    "reference": "CORE1-20250305-024"
+    "description": "Rental of equipment for art production",
+    "reference": "REF20250305-010"
   },
   {
     "date": "2025-03-05",
-    "account": "Finance",
+    "account": "Inventory Purchase Expense",
+    "debit": 5000.0,
+    "credit": 0.0,
+    "description": "Purchase of raw materials for gadgets and art",
+    "reference": "REF20250305-011"
+  },
+  {
+    "date": "2025-03-05",
+    "account": "Art Licensing Fees",
+    "debit": 2200.0,
+    "credit": 0.0,
+    "description": "Licensing fees for using art in commercial projects",
+    "reference": "REF20250305-012"
+  },
+  {
+    "date": "2025-03-05",
+    "account": "Employee Bonus Expense",
     "debit": 0.0,
-    "credit": 18000.0,
-    "description": "Tax refund received",
-    "reference": "FIN-20250305-025"
+    "credit": 15000.0,
+    "description": "Annual bonuses for artists and engineers",
+    "reference": "REF20250305-013"
+  },
+  {
+    "date": "2025-03-05",
+    "account": "Facility Rent Expense",
+    "debit": 4000.0,
+    "credit": 0.0,
+    "description": "Rent for art studio and gadget production facility",
+    "reference": "REF20250305-014"
+  },
+  {
+    "date": "2025-03-05",
+    "account": "Research & Development Expense",
+    "debit": 3000.0,
+    "credit": 0.0,
+    "description": "Costs for developing new gadgets and artwork concepts",
+    "reference": "REF20250305-015"
+  },
+  {
+    "date": "2025-03-05",
+    "account": "Utility Expense",
+    "debit": 1500.0,
+    "credit": 0.0,
+    "description": "Electricity and water bills for production facilities",
+    "reference": "REF20250305-016"
+  },
+  {
+    "date": "2025-03-05",
+    "account": "Shipment Expense",
+    "debit": 2200.0,
+    "credit": 0.0,
+    "description": "Shipping costs for delivering art pieces and gadgets",
+    "reference": "REF20250305-017"
+  },
+  {
+    "date": "2025-03-05",
+    "account": "Equipment Depreciation Expense",
+    "debit": 1000.0,
+    "credit": 0.0,
+    "description": "Depreciation on art and gadget production equipment",
+    "reference": "REF20250305-018"
+  },
+  {
+    "date": "2025-03-05",
+    "account": "Bank Loan Repayment",
+    "debit": 0.0,
+    "credit": 10000.0,
+    "description": "Repayment of bank loan for business expansion",
+    "reference": "REF20250305-019"
+  },
+  {
+    "date": "2025-03-05",
+    "account": "Sales Tax Payable",
+    "debit": 0.0,
+    "credit": 5000.0,
+    "description": "Sales tax on art and gadget sales",
+    "reference": "REF20250305-020"
   }
 ]

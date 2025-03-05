@@ -461,6 +461,7 @@ def get_budget():
         "data": paginated_data
     })
 
+
 # POST /api/request-budget
 # {
 #     "requested_by": "Juan Dela Cruz",
@@ -523,8 +524,8 @@ def add_budget():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-@app.route('/api/search-budget-status', methods=['POST'])  # Changed to POST since we are searching
-def search_budget_status():
+@app.route('/api/update-and-approve-budget', methods=['POST'])
+def update_and_approve_budget():
     # Parse JSON request body
     data = request.get_json()
     reference_number = data.get('reference_number')
@@ -532,17 +533,66 @@ def search_budget_status():
     if not reference_number:
         return jsonify({'error': 'Missing reference_number'}), 400
 
-    # Reference the specific budget entry in Firebase
-    budget_ref = db.reference(f'budget')
+    # Reference the budget collection in Firebase
+    budget_ref = db.reference('budget')
     budget_data = budget_ref.get()
 
     if not budget_data:
+        return jsonify({'error': 'No budget records found'}), 404
+
+    # Find the budget entry with the given reference_number
+    matching_key = None
+    matching_budget = None
+
+    for key, budget in budget_data.items():
+        if budget.get('reference_number') == reference_number:
+            matching_key = key
+            matching_budget = budget
+            break
+
+    if not matching_budget:
         return jsonify({'error': 'Budget entry not found'}), 404
 
-    return jsonify({'message': 'Budget found', 'reference_number': reference_number, 'budget_data': budget_data}), 200
+    # Update the status to "approved"
+    budget_ref.child(matching_key).update({'status': 'approved'})
 
-        
+    return jsonify({
+        'message': 'Budget approved successfully',
+        'reference_number': reference_number,
+        'updated_budget': {**matching_budget, 'status': 'approved'}
+    }), 200
     
+@app.route('/api/delete-budget/<string:reference_number>', methods=['DELETE'])
+def delete_budget(reference_number):
+    if not reference_number:
+        return jsonify({'error': 'Missing reference_number'}), 400
+
+    # Reference the budget collection in Firebase
+    budget_ref = db.reference('budget')
+    budget_data = budget_ref.get()
+
+    if not budget_data:
+        return jsonify({'error': 'No budget records found'}), 404
+
+    # Find the budget entry with the given reference_number
+    matching_key = None
+
+    for key, budget in budget_data.items():
+        if budget.get('reference_number') == reference_number:
+            matching_key = key
+            break
+
+    if not matching_key:
+        return jsonify({'error': 'Budget entry not found'}), 404
+
+    # Delete the budget entry
+    budget_ref.child(matching_key).delete()
+
+    return jsonify({
+        'message': 'Budget entry deleted successfully',
+        'reference_number': reference_number
+    }), 200
+
 #  GET /api/get-budget-report?start_date=2025-02-20&end_date=2025-02-27
 
 @app.route('/api/get-budget-report', methods=['GET'])
@@ -589,6 +639,19 @@ def get_budget_report():
         "budgets": budget_list
     })
 
+@app.route('/api/generate-accounts', methods=['POST'])
+def generate_accounts():
+    try:
+        data = request.get_json()
+        if not data:
+            return {'message': 'No data provided'}, 400  # Bad request if no data is provided
+        
+        general_ledger_ref = db.reference("general_ledger")
+        general_ledger_ref.push(data)
+        
+        return {'message': 'Account added to general ledger'}, 200  # Success
+    except Exception as e:
+        return {'message': f'An error occurred: {str(e)}'}, 500  # Internal server error for unexpected failures
 
 
 # How to use
@@ -642,6 +705,24 @@ def get_accounts():
         "total_pages": (total_records + per_page - 1) // per_page,  # Calculate total pages
         "data": paginated_accounts
     })
+
+@app.route('/api/delete-accounts/<key>', methods=['DELETE'])
+def delete_account(key):
+    try:
+        general_ledger_ref = db.reference("general_ledger")
+        
+        # Check if the entry exists by the key
+        entry = general_ledger_ref.child(key).get()
+        
+        if not entry:
+            return {'message': 'Account not found'}, 404  # Return 404 if the entry doesn't exist
+        
+        # Delete the entry by key
+        general_ledger_ref.child(key).delete()
+
+        return {'message': 'Account data successfully deleted'}, 200  # Success
+    except Exception as e:
+        return {'message': f'An error occurred: {str(e)}'}, 500  # Handle unexpected errors
 
 
 if __name__ == "__main__":

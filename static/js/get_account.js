@@ -1,10 +1,11 @@
 $(document).ready(function () {
-  let sortOrder = "asc";
+  let sortOrder = "desc";
   let currentPage = 1;
   let perPage = parseInt($("#per-page").val());
   let searchQuery = "";
   let totalPages = 1;
 
+  // Update pagination controls
   function updatePaginationControls() {
     $("#page-info").text(`Page ${currentPage} of ${totalPages}`);
 
@@ -21,6 +22,7 @@ $(document).ready(function () {
     }
   }
 
+  // Load accounts with pagination and search
   function loadAccounts() {
     let apiUrl = `/api/get-accounts?page=${currentPage}&per_page=${perPage}&sort=${sortOrder}`;
     if (searchQuery) apiUrl += `&search=${searchQuery}`;
@@ -42,7 +44,6 @@ $(document).ready(function () {
           return;
         }
 
-        // Set total pages from response
         totalPages = response.total_pages;
         updatePaginationControls();
 
@@ -73,7 +74,7 @@ $(document).ready(function () {
     });
   }
 
-  // Pagination controls
+  // Pagination control actions
   $("#prev-page").click(function () {
     if (currentPage > 1) {
       currentPage--;
@@ -88,18 +89,52 @@ $(document).ready(function () {
     }
   });
 
+  // Items per page change
   $("#per-page").change(function () {
     perPage = parseInt($(this).val());
     currentPage = 1;
     loadAccounts();
   });
 
-  // Search functionality
+  // Search input functionality
   $("#search-input").on("input", function () {
     searchQuery = $(this).val();
     currentPage = 1;
     loadAccounts();
   });
 
+  // Handle delete button click
+  $(document).on("click", ".delete-account", function () {
+    var accountId = $(this).data("id"); // Get the account ID from the clicked button
+    if (confirm("Are you sure you want to delete this account?")) {
+      deleteLedger(accountId); // Pass the accountId to the deleteLedger function
+    }
+  });
+
+  // Initial load
   loadAccounts();
 });
+
+// Function to delete account
+function deleteLedger(accountId) {
+  $.ajax({
+    url: `/api/delete-accounts/${accountId}`,
+    type: "DELETE",
+    success: function () {
+      Toastify({
+        text: "Deleted successfully!",
+        duration: 3000,
+        gravity: "top",
+        position: "right",
+        backgroundColor: "#db3446",
+      }).showToast();
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    },
+    error: function () {
+      alert("An error occurred while deleting the account.");
+    },
+  });
+}

@@ -12,8 +12,6 @@ $(document).ready(function () {
     method: "GET",
     dataType: "json",
     success: function (response) {
-      console.log(response);
-
       if (response.data && response.data.length > 0) {
         const budgetData = response.data[0]; // First item in array
         const budgetDetails = budgetData.budget_details;
@@ -74,7 +72,7 @@ $(document).ready(function () {
     method: "GET",
     dataType: "json",
     success: function (response) {
-      console.log(response);
+      // console.log(response);
 
       if (response.data && response.data.length > 0) {
         const budgetData = response.data[0]; // First item in array
