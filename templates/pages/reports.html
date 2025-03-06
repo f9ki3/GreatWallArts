@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='img/gwoa_logo.png') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/sales_table.css') }}"
+    />
+    <title>Generate Reports</title>
+    {% include 'components/header.html' %}
+    <style>
+      /* Align per-page selector and pagination */
+      .pagination-controls {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+      .per-page-select {
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="d-flex">
+      {% include 'components/navbar.html' %}
+      <div class="w-100">
+        {% include 'components/navigation.html' %}
+        <div class="container mt-5">
+          <div class="row align-items-center">
+            <div class="col-md-12 col-12">
+              <h1 class="fw-bolder">Generate Reports</h1>
+              <p class="text-muted">
+                You can select start and end date to generate reports here.
+              </p>
+              <hr />
+              <div class="row"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% include 'components/footer.html' %}
+
+    <!-- jQuery (Required) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='js/get_sales_all.js') }}"></script>
+  </body>
+</html>

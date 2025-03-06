@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='img/gwoa_logo.png') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/sales_table.css') }}"
+    />
+    <title>My Account</title>
+    {% include 'components/header.html' %}
+    <style>
+      /* Align per-page selector and pagination */
+      .pagination-controls {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+      .per-page-select {
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="d-flex">
+      {% include 'components/navbar.html' %}
+      <div class="w-100">
+        {% include 'components/navigation.html' %}
+        <div class="container mt-5">
+          <div class="row align-items-center">
+            <div class="col-12">
+              <h1 class="fw-bolder">My Account</h1>
+              <p class="text-muted">
+                You can view your account information here.
+              </p>
+              <hr />
+              <div class="row g-3">
+                <div class="col-12 col-md-3">
+                  <button class="btn border w-100" onclick="edit_account()">Edit My Account</button>
+                </div>
+                <div class="col-12 col-md-3">
+                  <button class="btn border w-100" onclick="change_password()">Change Password</button>
+                </div>
+              </div><div id="edit-account-div">
+                <div class="row g-3 mt-3">
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="fullname" class="mb-2">Full Name</label>
+                            <input id="fullname" type="text" class="form-control" value="{{ user['name'] }}" disabled />
+                            <input type="hidden" id="edit-id" value="{{ user['id'] }}">
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="email" class="mb-2">Email</label>
+                            <input id="email" type="email" class="form-control" value="{{ user['email'] }}" disabled />
+                        </div>
+                        <div id="password-div" class="d-none">
+                            <div class="form-group mt-3">
+                                <label for="edit-password" class="mb-2">Current Password</label>
+                                <input id="edit-password" type="password" class="form-control" placeholder="Enter new password" />
+                            </div>
+                            <div class="form-group mt-3">
+                                <label for="edit-confirm-password" class="mb-2">Confirm Password</label>
+                                <input id="edit-confirm-password" type="password" class="form-control" placeholder="Confirm new password" />
+                            </div>
+                            <div class="form-group mt-3">
+                                <input id="show-password-account" type="checkbox" class="form-check-input" />
+                                <label for="show-password-account" class="form-check-label ms-2">Show Password</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="save-edit-accounts" class="d-none">
+                    <div class="row g-3 mt-3">
+                        <div class="col-12 col-md-3">
+                            <button class="btn border w-100" onclick="cancel_edit_account()">Cancel</button>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <button id="save-button" disabled class="btn btn-warning w-100" onclick="update_account()">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const passwordInput = document.getElementById("edit-password");
+                const confirmPasswordInput = document.getElementById("edit-confirm-password");
+                const saveButton = document.getElementById("save-button");
+                const passwordDiv = document.getElementById("password-div");
+                const saveDiv = document.getElementById("save-edit-accounts");
+                const showPasswordCheckbox = document.getElementById("show-password-account");
+            
+                function validatePasswords() {
+                    const password = passwordInput.value.trim();
+                    const confirmPassword = confirmPasswordInput.value.trim();
+            
+                    if (password && confirmPassword) {
+                        confirmPasswordInput.classList.toggle("is-invalid", password !== confirmPassword);
+                    } else {
+                        confirmPasswordInput.classList.remove("is-invalid");
+                    }
+            
+                    validateForm();
+                }
+            
+                function validateForm() {
+                    const password = passwordInput.value.trim();
+                    const confirmPassword = confirmPasswordInput.value.trim();
+                    const passwordSectionVisible = !passwordDiv.classList.contains("d-none");
+            
+                    if (passwordSectionVisible && password && confirmPassword && password === confirmPassword) {
+                        saveButton.removeAttribute("disabled");
+                        saveDiv.classList.remove("d-none");
+                    } else {
+                        saveButton.setAttribute("disabled", "true");
+                        saveDiv.classList.add("d-none");
+                    }
+                }
+            
+                passwordInput.addEventListener("input", validatePasswords);
+                confirmPasswordInput.addEventListener("input", validatePasswords);
+            
+                showPasswordCheckbox.addEventListener("change", function () {
+                    const type = this.checked ? "text" : "password";
+                    passwordInput.type = type;
+                    confirmPasswordInput.type = type;
+                });
+            });
+            </script>
+            
+              <div id="change-password-div" class="d-none">
+                <div class="row g-3 mt-3">
+                  <div class="col-12 col-md-6">
+                    <div class="form-group">
+                      <label for="new-password" class="mb-2">New Password</label>
+                      <input
+                        id="new-password"
+                        type="password"
+                        class="form-control"
+                        placeholder="Enter your new password"
+                      />
+                    </div>
+                    <div class="form-group mt-3">
+                      <label for="confirm-new-password" class="mb-2">Confirm Password</label>
+                      <input
+                        id="confirm-new-password"
+                        type="password"
+                        class="form-control"
+                        placeholder="Re-enter your new password"
+                      />
+                    </div>
+                    <div class="form-group mt-3">
+                      <label for="current-password" class="mb-2">Current Password</label>
+                      <input
+                        id="current-password"
+                        type="password"
+                        class="form-control"
+                        placeholder="Enter your current password"
+                      />
+                    </div>
+                    <div class="form-group mt-3">
+                      <input id="show-password" type="checkbox" class="form-check-input" />
+                      <label for="show-password" class="form-check-label ms-2">Show Password</label>
+                    </div>
+              
+                    <div class="col-12 col-md-12">
+                      <div class="row g-3 mt-3">
+                        <div class="col-12 col-md-6">
+                          <button class="btn border w-100" onclick="cancel_change_password()">Cancel</button>
+                        </div>
+                        <div class="col-12 col-md-6">
+                          <button class="btn btn-warning w-100">Save</button>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% include 'components/footer.html' %}
+    <script src="{{ url_for('static', filename='js/my_account.js') }}"></script>
+  </body>
+</html>

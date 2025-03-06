@@ -33,6 +33,21 @@ def sales():
         return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
     return render_template('pages/sales.html')  # Show dashboard if logged in
 
+
+@app.route('/account')
+def my_account():
+    if 'user' not in session:  # Check if user is logged in
+        return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
+    return render_template('pages/my_account.html', user = session['user'])  # Show dashboard if logged in
+
+
+
+@app.route('/reports')
+def reports():
+    if 'user' not in session:  # Check if user is logged in
+        return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
+    return render_template('pages/reports.html')  # Show dashboard if logged in
+
 @app.route('/general_ledger')
 def general_ledger():
     if 'user' not in session:  # Check if user is logged in
@@ -67,7 +82,7 @@ def documentation():
 def dashboard():
     if 'user' not in session:  # Check if user is logged in
         return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
-    return render_template('pages/dashboard.html')  # Show dashboard if logged in
+    return render_template('pages/dashboard.html', user = session['user'])  # Show dashboard if logged in
 
 @app.route('/create_budget')
 def create_budget():
@@ -125,6 +140,19 @@ def login():
     except requests.exceptions.RequestException as e:
         return jsonify({"error": "Failed to reach authentication server", "details": str(e)}), 500
     
+@app.route("/session-update/<edit_id>", methods=["GET"])
+def update_session(edit_id):
+    # Make a request to the external API
+    url = f"https://admin.gwamerchandise.com/api/users/{edit_id}"
+    
+    try:
+        response = requests.get(url)  # Send the GET request
+        response.raise_for_status()  # Raise an error for bad responses (4xx and 5xx)
+        session.clear()
+        return jsonify('updated success')  # Return the JSON response
+    
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error": str(e)}), 500  # Handle request errors
 
 
 # GET /api/get-sales
@@ -561,6 +589,45 @@ def update_and_approve_budget():
         'reference_number': reference_number,
         'updated_budget': {**matching_budget, 'status': 'approved'}
     }), 200
+
+
+@app.route('/api/update-and-delete-budget', methods=['POST'])
+def update_and_delete_budget():
+    # Parse JSON request body
+    data = request.get_json()
+    reference_number = data.get('reference_number')
+
+    if not reference_number:
+        return jsonify({'error': 'Missing reference_number'}), 400
+
+    # Reference the budget collection in Firebase
+    budget_ref = db.reference('budget')
+    budget_data = budget_ref.get()
+
+    if not budget_data:
+        return jsonify({'error': 'No budget records found'}), 404
+
+    # Find the budget entry with the given reference_number
+    matching_key = None
+    matching_budget = None
+
+    for key, budget in budget_data.items():
+        if budget.get('reference_number') == reference_number:
+            matching_key = key
+            matching_budget = budget
+            break
+
+    if not matching_budget:
+        return jsonify({'error': 'Budget entry not found'}), 404
+
+    # Update the status to "approved"
+    budget_ref.child(matching_key).update({'status': 'declined'})
+
+    return jsonify({
+        'message': 'Budget approved successfully',
+        'reference_number': reference_number,
+        'updated_budget': {**matching_budget, 'status': 'declined'}
+    }), 200
     
 @app.route('/api/delete-budget/<string:reference_number>', methods=['DELETE'])
 def delete_budget(reference_number):
@@ -669,7 +736,7 @@ def get_accounts():
     accounts_list = [{"id": key, **value} for key, value in accounts_data.items()]
 
     # Sorting (default is ascending, 'desc' for descending)
-    sort_order = request.args.get('sort', 'asc')
+    sort_order = request.args.get('sort', 'desc')
     if sort_order == 'desc':
         accounts_list = sorted(accounts_list, key=lambda x: x['date'], reverse=True)
     else:

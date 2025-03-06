@@ -9,22 +9,13 @@ $(document).ready(function () {
   function updatePaginationControls() {
     $("#page-info").text(`Page ${currentPage} of ${totalPages}`);
 
-    if (currentPage === 1) {
-      $("#prev-page").addClass("disabled");
-    } else {
-      $("#prev-page").removeClass("disabled");
-    }
-
-    if (currentPage >= totalPages) {
-      $("#next-page").addClass("disabled");
-    } else {
-      $("#next-page").removeClass("disabled");
-    }
+    $("#prev-page").toggleClass("disabled", currentPage === 1);
+    $("#next-page").toggleClass("disabled", currentPage >= totalPages);
   }
 
-  // Load accounts with pagination and search
+  // Load accounts with pagination, search, and sorting by date
   function loadAccounts() {
-    let apiUrl = `/api/get-accounts?page=${currentPage}&per_page=${perPage}&sort=${sortOrder}`;
+    let apiUrl = `/api/get-accounts?page=${currentPage}&per_page=${perPage}&sort=${sortOrder}&sort_by=date`;
     if (searchQuery) apiUrl += `&search=${searchQuery}`;
 
     $.ajax({
@@ -39,7 +30,7 @@ $(document).ready(function () {
           tableBody.append(
             '<tr><td colspan="7" class="text-center">No accounts found.</td></tr>'
           );
-          totalPages = 1; // Reset totalPages if no data is found
+          totalPages = 1;
           updatePaginationControls();
           return;
         }
@@ -47,8 +38,15 @@ $(document).ready(function () {
         totalPages = response.total_pages;
         updatePaginationControls();
 
+        // Sort by date before rendering if the backend doesn't handle it
+        let sortedData = response.data.sort((a, b) => {
+          return sortOrder === "desc"
+            ? new Date(b.date) - new Date(a.date)
+            : new Date(a.date) - new Date(b.date);
+        });
+
         // Render accounts
-        response.data.forEach((item) => {
+        sortedData.forEach((item) => {
           tableBody.append(`
             <tr>
               <td><p class="mt-2">${item.reference}</p></td>
@@ -103,11 +101,17 @@ $(document).ready(function () {
     loadAccounts();
   });
 
+  // Sorting toggle
+  $("#sort-date").click(function () {
+    sortOrder = sortOrder === "desc" ? "asc" : "desc";
+    loadAccounts();
+  });
+
   // Handle delete button click
   $(document).on("click", ".delete-account", function () {
-    var accountId = $(this).data("id"); // Get the account ID from the clicked button
+    var accountId = $(this).data("id");
     if (confirm("Are you sure you want to delete this account?")) {
-      deleteLedger(accountId); // Pass the accountId to the deleteLedger function
+      deleteLedger(accountId);
     }
   });
 
