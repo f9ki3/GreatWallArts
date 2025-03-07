@@ -1061,6 +1061,65 @@ def delete_account(key):
     except Exception as e:
         return {'message': f'An error occurred: {str(e)}'}, 500  # Handle unexpected errors
 
+@app.route('/api/get-budget-summary', methods=['GET'])
+def get_budget_summary():
+    """Retrieve the budget summary for the current month."""
+
+    # Get the current month & year
+    now = datetime.now()
+    current_month = now.strftime("%Y-%m")  # Format: YYYY-MM
+
+    # Reference to "budget" collection in Firebase
+    budget_ref = db.reference("budget")
+    budget_data = budget_ref.get()
+
+    if not budget_data:
+        return jsonify({"message": "No budget data found", "summary": {}}), 200
+
+    # Initialize summary data
+    total_requests = 0
+    total_approved = 0
+    total_pending = 0
+    total_declined = 0
+    total_budget_requested = 0
+    category_totals = {}
+
+    # Process each budget request
+    for item in budget_data.values():
+        request_date = item.get("date_of_request", "")[:7]  # Extract YYYY-MM
+        status = item.get("status", "").lower()
+        
+        # Only process requests for the current month
+        if request_date == current_month:
+            total_requests += 1
+
+            # Loop through each budget detail to sum amounts per category
+            for detail in item.get("budget_details", []):
+                category = detail.get("category", "Uncategorized")
+                amount = float(detail.get("amount", 0))
+
+                total_budget_requested += amount
+                category_totals[category] = category_totals.get(category, 0) + amount
+
+                # Sum by status
+                if status == "approved":
+                    total_approved += amount
+                elif status == "pending":
+                    total_pending += amount
+                elif status == "declined":
+                    total_declined += amount
+
+    return jsonify({
+        "month": current_month,
+        "summary": {
+            "total_requests": total_requests,
+            "total_approved_amount": total_approved,
+            "total_pending_amount": total_pending,
+            "total_declined_amount": total_declined,
+            "total_budget_requested": total_budget_requested,
+            # "category_totals": category_totals  # Breaks down spending per category
+        }
+    })
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")

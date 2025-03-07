@@ -53,10 +53,38 @@
 
             <div class="col-md-3 col-12">
               <div class="border rounded-4 p-3 bg-light-white text-muted">
-                <h3 id="totalSales" class="fw-bolder">₱500,000</h3>
+                <h3 id="edpended" class="fw-bolder">0</h3>
                 <p class="mb-0 text-muted">Expended Budget</p>
               </div>
             </div>
+
+            <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                fetch("/api/get-budget-summary")
+                  .then((response) => response.json())
+                  .then((data) => {
+                    if (
+                      data.summary &&
+                      data.summary.total_approved_amount !== undefined
+                    ) {
+                      // Format amount as PHP currency
+                      const approvedAmount = new Intl.NumberFormat("en-PH", {
+                        style: "currency",
+                        currency: "PHP",
+                      }).format(data.summary.total_approved_amount);
+
+                      // Update the totalSales div
+                      document.getElementById("edpended").textContent =
+                        approvedAmount;
+                    } else {
+                      console.error("Invalid response format:", data);
+                    }
+                  })
+                  .catch((error) =>
+                    console.error("Error fetching budget summary:", error)
+                  );
+              });
+            </script>
 
             <div class="col-md-3 col-12">
               <div class="border rounded-4 p-3 bg-light-white text-muted">
