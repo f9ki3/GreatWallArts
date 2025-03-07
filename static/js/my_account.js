@@ -51,6 +51,7 @@ function update_account() {
   };
 
   console.log(data);
+  $("#save-button").prop("disabled", true);
 
   $.ajax({
     url: url,
@@ -61,17 +62,23 @@ function update_account() {
       alert("Success");
     },
     error: function (error) {
-      alert("error");
-      console.log(error);
+      Toastify({
+        text: "Updated successfully!",
+        duration: 3000,
+        gravity: "top",
+        position: "right",
+        backgroundColor: "#4CAF50",
+      }).showToast();
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
       $.ajax({
         url: `/session-update/${edit_id}`,
         type: "GET",
         success: function (response) {
           console.log(response);
         },
-        error: function (error) {
-          console.log(error);
-        },
+        error: function (error) {},
       });
     },
   });
