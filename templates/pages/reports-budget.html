@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='img/gwoa_logo.png') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/sales_table.css') }}"
+    />
+    <style>
+      .header-print {
+        display: none;
+      }
+      @media print {
+        .header-print {
+          display: block;
+        }
+        .gwa-sidebar,
+        .btn-print,
+        .go-back {
+          display: none !important;
+        }
+        p {
+          font-size: 12px !important;
+        }
+      }
+    </style>
+    <title>Budget Reports</title>
+    {% include 'components/header.html' %}
+  </head>
+  <body>
+    <div class="d-flex">
+      {% include 'components/navbar.html' %}
+      <div class="w-100">
+        {% include 'components/navigation.html' %}
+        <div class="container mt-5">
+          <div class="row align-items-center">
+            <div class="header-print">
+              <div class="d-flex">
+                <div class="d-flex" style="width: 15%">
+                  <img
+                    class="img-fluid me-2"
+                    src="{{ url_for('static', filename='img/gwoa_logo.png') }}"
+                    alt="Logo"
+                    style="width: 70px; height: 70px"
+                  />
+                </div>
+                <div style="width: 85%">
+                  <h6 class="fw-bolder m-0" style="font-size: 20px">
+                    GREAT WALL ARTS
+                  </h6>
+                  <p class="m-0 p-0">
+                    2F Unit 203 Solen Building C. Raymundo corner F. Legaspi,
+                    Maybunga Pasig 09175000318 / 02 87494031
+                  </p>
+                </div>
+              </div>
+              <hr />
+            </div>
+          </div>
+          <div>
+            <div>
+              <div class="row">
+                <div class="col-12 col-md-8">
+                  <h1 class="fw-bolder">Budget Summary Reports</h1>
+                </div>
+                <div
+                  class="col-12 col-md-4 d-flex flex-column align-items-md-end"
+                >
+                  <a href="/reports" class="text-md-end go-back">Go Back</a>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row mb-3" style="font-size: 15px">
+                <div class="col-md-6">
+                  <p class="p-0 m-0">
+                    Start Date: <span class="start_date"></span>
+                  </p>
+                  <p class="p-0 m-0">
+                    End Date: <span class="end_date"></span>
+                  </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                  <p class="p-0 m-0">
+                    Total Budget Amount:
+                    <span class="total_budget_amount"></span>
+                  </p>
+                  <p class="p-0 m-0">
+                    Total Requests: <span class="total_requests"></span>
+                  </p>
+                </div>
+              </div>
+              <hr />
+              <table class="table table-striped table-responsive">
+                <thead>
+                  <tr>
+                    <th style="width: 20%"><p>Amount</p></th>
+                    <th style="width: 20%"><p>Category</p></th>
+                    <th style="width: 20%"><p>Descriptions</p></th>
+                  </tr>
+                </thead>
+                <tbody class="sales-invoices-list"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="row mb-5">
+            <div class="col-12 col-md-8"></div>
+            <div class="col-12 col-md-4">
+              <button
+                onclick="print()"
+                class="btn btn-warning btn-print w-100 mt-3"
+              >
+                <i class="bi bi-printer"></i> Print
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% include 'components/footer.html' %}
+
+    <!-- jQuery (Required) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='js/view_sales_reports.js') }}"></script>
+    <script>
+      // Extract start_date and end_date from the URL query string
+      const urlParams = new URLSearchParams(window.location.search);
+      const startDate = urlParams.get("start_date");
+      const endDate = urlParams.get("end_date");
+
+      // Send the extracted dates in the AJAX request
+      $.ajax({
+        url: `/api/get-budget-report?start_date=${startDate}&end_date=${endDate}`,
+        type: "GET",
+        success: function (response) {
+          $(".start_date").text(response.summary_report.start_date);
+          $(".end_date").text(response.summary_report.end_date);
+          $(".total_budget_amount").text(
+            response.summary_report.total_budget_amount
+          );
+          $(".total_requests").text(response.summary_report.total_requests);
+
+          let tableBody = $(".sales-invoices-list");
+          tableBody.empty(); // Clear previous data
+
+          // Iterate over each budget entry
+          response.budgets.forEach((budget) => {
+            budget.budget_details.forEach((detail) => {
+              let row = `<tr>
+          <td>${detail.amount}</td>
+          <td>${detail.category}</td>
+          <td>${detail.description}</td>
+        </tr>`;
+              tableBody.append(row);
+            });
+          });
+
+          console.log(response);
+        },
+        error: function (error) {
+          console.log("Error fetching budget report:", error);
+        },
+      });
+    </script>
+  </body>
+</html>

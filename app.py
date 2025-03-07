@@ -43,6 +43,26 @@ def sales():
         return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
     return render_template('pages/sales.html')  # Show dashboard if logged in
 
+@app.route('/reports-sales')
+def reports_sales():
+    if 'user' not in session:  # Check if user is logged in
+        return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
+    return render_template('pages/reports-sales.html')  # Show dashboard if logged in
+
+
+@app.route('/reports-logistics')
+def reports_logistics():
+    if 'user' not in session:  # Check if user is logged in
+        return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
+    return render_template('pages/reports-logistics.html')  # Show dashboard if logged in
+
+
+@app.route('/reports-budget')
+def reports_budget():
+    if 'user' not in session:  # Check if user is logged in
+        return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
+    return render_template('pages/reports-budget.html')  # Show dashboard if logged in
+
 
 @app.route('/account')
 def my_account():
@@ -279,6 +299,80 @@ def get_sales_forecast():
     }
 
     return jsonify(forecast_data)
+
+@app.route('/api/reports/<report_id>', methods=['DELETE'])
+def delete_report(report_id):
+    try:
+        # Reference the Firebase database at the "reports" node and delete the report with the given report_id
+        reports_ref = db.reference("reports")
+        report_ref = reports_ref.child(report_id)
+        
+        # Delete the report from Firebase
+        report_ref.delete()
+
+        # Return success message
+        return jsonify({"message": "Report successfully deleted"}), 200
+    except Exception as e:
+        # Handle any errors that occur during the deletion process
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/get-reports', methods=['GET'])
+def get_reports():
+    ref = db.reference('reports')
+    reports = ref.get()
+
+    if not reports:
+        return jsonify({"status": "error", "message": "No reports found"}), 404
+
+    # Convert Firebase dictionary to list
+    report_list = [{"id": key, **value} for key, value in reports.items()]
+
+    # Get query parameters
+    page = int(request.args.get('page', 1))
+    per_page = int(request.args.get('limit', 10))
+    search_query = request.args.get('search', '').strip().lower()
+
+    # Filter by search query if provided
+    if search_query:
+        report_list = [r for r in report_list if search_query in r.get('report_number', '').lower()]
+
+    # Pagination logic
+    total_records = len(report_list)
+    total_pages = (total_records + per_page - 1) // per_page  # Calculate total pages
+    start = (page - 1) * per_page
+    end = start + per_page
+    paginated_reports = report_list[start:end]
+
+    return jsonify({
+        "status": "success",
+        "reports": paginated_reports,
+        "total_pages": total_pages,
+        "current_page": page
+    }), 200
+
+@app.route('/api/generate-reports', methods=['POST'])
+def generate_reports():
+    try:
+        data = request.get_json()
+
+        # Ensure required fields are present
+        required_fields = ["report_number", "created_date", "type", "start_date", "end_date", "Link"]
+        if not all(field in data for field in required_fields):
+            return jsonify({"error": "Missing required fields"}), 400
+
+        # Reference to the reports node in Firebase
+        reports_ref = db.reference("reports")
+
+        # Push new report to Firebase
+        new_report_ref = reports_ref.push(data)
+
+        return jsonify({
+            "message": "Report added successfully",
+            "report_id": new_report_ref.key
+        }), 201
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # GET /api/get-sales
 # GET /api/get-sales?sort_by=total_sum&order=asc | total_sum, earnings, or timestamp
@@ -819,7 +913,6 @@ def delete_budget(reference_number):
         'reference_number': reference_number
     }), 200
 
-#  GET /api/get-budget-report?start_date=2025-02-20&end_date=2025-02-27
 
 @app.route('/api/get-budget-report', methods=['GET'])
 def get_budget_report():
@@ -838,7 +931,7 @@ def get_budget_report():
     # Date filtering
     start_date = request.args.get("start_date")
     end_date = request.args.get("end_date")
-    
+
     if start_date and end_date:
         try:
             start_date = datetime.strptime(start_date, "%Y-%m-%d")
@@ -846,12 +939,29 @@ def get_budget_report():
         except ValueError:
             return jsonify({"error": "Invalid date format. Use YYYY-MM-DD."}), 400
         
-        budget_list = [budget for budget in budget_list if start_date.date() <= datetime.strptime(budget["date_of_request"], "%Y-%m-%d").date() <= end_date.date()]
+        # Filter budgets based on date_of_request, ensuring it exists
+        budget_list = [
+            budget for budget in budget_list
+            if "date_of_request" in budget and
+               start_date.date() <= datetime.strptime(budget["date_of_request"], "%Y-%m-%d").date() <= end_date.date()
+        ]
     
     # Summary report calculation
-    total_budget_amount = sum(sum(detail.get("amount", 0) for detail in budget.get("budget_details", [])) for budget in budget_list)
+    total_budget_amount = 0
+
+    for budget in budget_list:
+        budget_details = budget.get("budget_details", [])
+        
+        # Ensure `budget_details` is a list before iterating
+        if isinstance(budget_details, list):
+            for detail in budget_details:
+                try:
+                    total_budget_amount += float(detail.get("amount", 0))  # Convert to float safely
+                except (ValueError, TypeError):
+                    pass  # Skip invalid amount values
+
     total_requests = len(budget_list)
-    
+
     summary_report = {
         "start_date": start_date.strftime("%Y-%m-%d") if start_date else None,
         "end_date": end_date.strftime("%Y-%m-%d") if end_date else None,
@@ -864,6 +974,7 @@ def get_budget_report():
         "summary_report": summary_report,
         "budgets": budget_list
     })
+
 
 @app.route('/api/generate-accounts', methods=['POST'])
 def generate_accounts():

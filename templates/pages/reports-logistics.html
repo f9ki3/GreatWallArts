@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='img/gwoa_logo.png') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/sales_table.css') }}"
+    />
+    <style>
+      .header-print {
+        display: none;
+      }
+      @media print {
+        .header-print {
+          display: block;
+        }
+        .gwa-sidebar,
+        .btn-print,
+        .go-back {
+          display: none !important;
+        }
+        p {
+          font-size: 12px !important;
+        }
+      }
+    </style>
+    <title>Logistics Reports</title>
+    {% include 'components/header.html' %}
+  </head>
+  <body>
+    <div class="d-flex">
+      {% include 'components/navbar.html' %}
+      <div class="w-100">
+        {% include 'components/navigation.html' %}
+        <div class="container mt-5">
+          <div class="row align-items-center">
+            <div class="header-print">
+              <div class="d-flex">
+                <div class="d-flex" style="width: 15%">
+                  <img
+                    class="img-fluid me-2"
+                    src="{{ url_for('static', filename='img/gwoa_logo.png') }}"
+                    alt="Logo"
+                    style="width: 70px; height: 70px"
+                  />
+                </div>
+                <div style="width: 85%">
+                  <h6 class="fw-bolder m-0" style="font-size: 20px">
+                    GREAT WALL ARTS
+                  </h6>
+                  <p class="m-0 p-0">
+                    2F Unit 203 Solen Building C. Raymundo corner F. Legaspi,
+                    Maybunga Pasig 09175000318 / 02 87494031
+                  </p>
+                </div>
+              </div>
+              <hr />
+            </div>
+          </div>
+          <div>
+            <div>
+              <div class="row">
+                <div class="col-12 col-md-8">
+                  <h1 class="fw-bolder">Logistics Summary Reports</h1>
+                </div>
+                <div
+                  class="col-12 col-md-4 d-flex flex-column align-items-md-end"
+                >
+                  <a href="/reports" class="text-md-end go-back">Go Back</a>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="row mb-3" style="font-size: 15px">
+                <div class="col-md-6">
+                  <p class="p-0 m-0">
+                    Total Invoices: <span class="total-invoice"></span>
+                  </p>
+                  <p class="p-0 m-0">
+                    Start Date: <span class="start-date"></span>
+                  </p>
+                  <p class="p-0 m-0">
+                    End Date: <span class="end-date"></span>
+                  </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                  <p class="p-0 m-0">
+                    Total Amount: <span class="total_amount"></span>
+                  </p>
+                  <p class="p-0 m-0">
+                    Total Invoices: <span class="total_invoices"></span>
+                  </p>
+                  <p class="p-0 m-0">Paid: <span class="paid"></span></p>
+                  <p class="p-0 m-0">Overdue: <span class="overdue"></span></p>
+                  <p class="p-0 m-0">Pending: <span class="pending"></span></p>
+                </div>
+              </div>
+              <hr />
+              <table class="table table-striped table-responsive">
+                <thead>
+                  <tr>
+                    <th style="width: 20%"><p>Invoice Number</p></th>
+                    <th style="width: 20%"><p>Date</p></th>
+                    <th style="width: 10%"><p>Subtotal</p></th>
+                    <th style="width: 10%"><p>Discount</p></th>
+                    <th style="width: 10%"><p>Tax Rate (%)</p></th>
+                    <th style="width: 10%"><p>Tax Amount</p></th>
+                    <th style="width: 10%"><p>Total Amount</p></th>
+                    <th style="width: 10%"><p>Status</p></th>
+                  </tr>
+                </thead>
+                <tbody class="sales-invoices-list"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="row mb-5">
+            <div class="col-12 col-md-8"></div>
+            <div class="col-12 col-md-4">
+              <button
+                onclick="print()"
+                class="btn btn-warning btn-print w-100 mt-3"
+              >
+                <i class="bi bi-printer"></i> Print
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% include 'components/footer.html' %}
+
+    <!-- jQuery (Required) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='js/view_sales_reports.js') }}"></script>
+    <script>
+      // Extract start_date and end_date from the URL query string
+      const urlParams = new URLSearchParams(window.location.search);
+      const startDate = urlParams.get("start_date");
+      const endDate = urlParams.get("end_date");
+
+      // Send the extracted dates in the AJAX request
+      $.ajax({
+        url: `/api/get-logistics-reports?start_date=${startDate}&end_date=${endDate}`,
+        type: "GET",
+        success: function (response) {
+          $(".total-invoice").text(response.summary_report.total_invoices);
+          $(".start-date").text(response.summary_report.start_date);
+          $(".end-date").text(response.summary_report.end_date);
+          $(".paid").text(response.summary_report.status_summary.Paid);
+          $(".overdue").text(response.summary_report.status_summary.Overdue);
+          $(".pending").text(response.summary_report.status_summary.Pending);
+          $(".total_amount").text(response.summary_report.total_amount);
+          $(".total_invoices").text(response.summary_report.total_invoices);
+          $(".total_amount").text(response.summary_report.total_amount);
+          $(".total_invoices").text(response.summary_report.total_invoices);
+          console.log(response);
+
+          const salesInvoicesList = $(".sales-invoices-list");
+
+          response["logistics invoices"].forEach((item) => {
+            let invoice = item.invoice; // Access the invoice object
+            salesInvoicesList.append(`
+                <tr>
+                <td>${invoice.invoice_number}</td>
+                <td>${invoice.created_at}</td>
+                <td>${invoice.subtotal}</td>
+                <td>${invoice.discount_amount}</td>
+                <td>${invoice.tax_rate}</td>
+                <td>${invoice.tax_amount}</td>
+                <td>${invoice.total_amount}</td>
+                <td>${invoice.status}</td>
+                </tr>
+            `);
+          });
+        },
+        error: function (error) {
+          console.log("Error fetching sales report:", error);
+        },
+      });
+    </script>
+  </body>
+</html>

@@ -30,7 +30,7 @@
         }
       }
     </style>
-    <title>View Logistics</title>
+    <title>Sales Report</title>
     {% include 'components/header.html' %}
   </head>
   <body>
@@ -68,12 +68,12 @@
             <div>
               <div class="row">
                 <div class="col-12 col-md-8">
-                  <h1 class="fw-bolder">Logistics Invoice</h1>
+                  <h1 class="fw-bolder">Sales Summary Reports</h1>
                 </div>
                 <div
                   class="col-12 col-md-4 d-flex flex-column align-items-md-end"
                 >
-                  <a href="/logistics" class="text-md-end go-back">Go Back</a>
+                  <a href="/reports" class="text-md-end go-back">Go Back</a>
                 </div>
               </div>
             </div>
@@ -81,35 +81,21 @@
               <div class="row mb-3" style="font-size: 15px">
                 <div class="col-md-6">
                   <p class="p-0 m-0">
-                    Invoice Number: <span class="invoice-number"></span>
-                  </p>
-                  <p class="p-0 m-0">PO ID: <span class="po-id"></span></p>
-                  <p class="p-0 m-0">
-                    Vendor ID: <span class="vendor-id"></span>
+                    Total Invoices: <span class="total-invoice"></span>
                   </p>
                   <p class="p-0 m-0">
-                    Supplier: <span class="supplier"></span>
+                    Start Date: <span class="start-date"></span>
                   </p>
                   <p class="p-0 m-0">
-                    Shipment Date: <span class="shipment-date"></span>
+                    End Date: <span class="end-date"></span>
                   </p>
                 </div>
                 <div class="col-md-6 text-md-end">
                   <p class="p-0 m-0">
-                    Created At: <span class="created-at"></span>
+                    Total Sales Amount: <span class="created-at"></span>
                   </p>
                   <p class="p-0 m-0">
-                    Due Date: <span class="due-date"></span>
-                  </p>
-                  <p class="p-0 m-0">
-                    Delivery Date: <span class="delivery-date"></span>
-                  </p>
-                  <p class="p-0 m-0">
-                    Order Date: <span class="order-date"></span>
-                  </p>
-                  <p class="p-0 m-0">
-                    Status:
-                    <span class="badge status bg-warning text-dark"></span>
+                    Total Sales Earnings: <span class="due-date"></span>
                   </p>
                 </div>
               </div>
@@ -117,43 +103,18 @@
               <table class="table table-striped table-responsive">
                 <thead>
                   <tr>
-                    <th style="width: 15%"><p>Brand</p></th>
-                    <th style="width: 20%"><p>Name</p></th>
-                    <th style="width: 10%"><p>QTY</p></th>
-                    <th style="width: 20%"><p>Regular Price</p></th>
-                    <th style="width: 20%"><p>Sale Price</p></th>
-                    <th style="width: 20%"><p>Total Price</p></th>
+                    <th style="width: 20%"><p>id</p></th>
+                    <th style="width: 20%"><p>date</p></th>
+                    <th style="width: 10%"><p>total</p></th>
+                    <th style="width: 10%"><p>earnings</p></th>
                   </tr>
                 </thead>
-                <tbody class="product-list"></tbody>
-              </table>
-
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th><p>Subtotal</p></th>
-                    <th><p>Tax Rate</p></th>
-                    <th><p>Tax Amount</p></th>
-                    <th><p>Discount</p></th>
-                    <th><p>Total Amount</p></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td style="width: 10%"><p class="subtotal"></p></td>
-                    <td style="width: 10%"><p class="tax-rate"></p></td>
-                    <td style="width: 10%"><p class="tax-amount"></p></td>
-                    <td style="width: 10%"><p class="discount"></p></td>
-                    <td style="width: 10%" class="fw-bold">
-                      <p class="total-amount"></p>
-                    </td>
-                  </tr>
-                </tbody>
+                <tbody class="sales-invoices-list"></tbody>
               </table>
             </div>
           </div>
 
-          <div class="row">
+          <div class="row mb-5">
             <div class="col-12 col-md-8"></div>
             <div class="col-12 col-md-4">
               <button
@@ -172,6 +133,42 @@
 
     <!-- jQuery (Required) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ url_for('static', filename='js/view_logistics.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/view_sales_reports.js') }}"></script>
+    <script>
+      // Extract start_date and end_date from the URL query string
+      const urlParams = new URLSearchParams(window.location.search);
+      const startDate = urlParams.get("start_date");
+      const endDate = urlParams.get("end_date");
+
+      // Send the extracted dates in the AJAX request
+      $.ajax({
+        url: `/api/sales-reports?start_date=${startDate}&end_date=${endDate}`,
+        type: "GET",
+        success: function (response) {
+          // Update summary report information
+          $(".total-invoice").text(response.summary_report.total_invoices);
+          $(".start-date").text(response.summary_report.start_date);
+          $(".end-date").text(response.summary_report.end_date);
+          $(".created-at").text(response.summary_report.total_sales_amount);
+          $(".due-date").text(response.summary_report.total_sales_earnings);
+
+          // Loop through sales invoices and populate the table
+          const salesInvoicesList = $(".sales-invoices-list");
+          response["sales invoices"].forEach((invoice) => {
+            salesInvoicesList.append(`
+              <tr>
+                <td>${invoice.id}</td>
+                <td>${invoice.timestamp}</td>
+                <td>${invoice.total_sum}</td>
+                <td>${invoice.earnings}</td>
+              </tr>
+            `);
+          });
+        },
+        error: function (error) {
+          console.log("Error fetching sales report:", error);
+        },
+      });
+    </script>
   </body>
 </html>
