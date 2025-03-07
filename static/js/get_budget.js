@@ -25,7 +25,7 @@ $(document).ready(function () {
     }
 
     $.get(apiUrl, function (response) {
-      console.log(response);
+      // console.log(response);
       let requests = response.data;
       let totalPages = response.total_pages || 1;
       $("#page-info").text(`Page ${page} of ${totalPages}`);

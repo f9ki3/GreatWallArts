@@ -11,7 +11,12 @@
     <title>Dashboard</title>
 
     {% include 'components/header.html' %}
-
+    <style>
+      canvas {
+        width: auto;
+        height: 500px;
+      }
+    </style>
     <!-- ApexCharts Library -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
   </head>
@@ -30,96 +35,537 @@
               </p>
             </div>
 
-            <!-- Monthly Revenue -->
-            <div class="col-md-6 col-12">
+            <!-- total_earnings -->
+            <div class="col-md-3 col-12">
               <div class="border rounded-4 p-3 bg-light-white text-muted">
-                <h3 class="fw-bolder">₱1,556,900.00</h3>
-                <p class="mb-0">Monthly Revenue</p>
+                <h3 id="totalEarnings" class="fw-bolder">₱0.00</h3>
+                <p class="mb-0">Total Earnings</p>
               </div>
             </div>
 
-            <!-- Yearly Revenue -->
-            <div class="col-md-6 col-12">
+            <!-- total_sales -->
+            <div class="col-md-3 col-12">
               <div class="border rounded-4 p-3 bg-light-white text-muted">
-                <h3 class="fw-bolder">₱18,682,800.00</h3>
-                <p class="mb-0 text-muted">2024 Revenue</p>
+                <h3 id="totalSales" class="fw-bolder">₱0.00</h3>
+                <p class="mb-0 text-muted">Total Sales</p>
+              </div>
+            </div>
+
+            <div class="col-md-3 col-12">
+              <div class="border rounded-4 p-3 bg-light-white text-muted">
+                <h3 id="totalSales" class="fw-bolder">₱500,000</h3>
+                <p class="mb-0 text-muted">Expended Budget</p>
+              </div>
+            </div>
+
+            <div class="col-md-3 col-12">
+              <div class="border rounded-4 p-3 bg-light-white text-muted">
+                <h3 id="totalSales" class="fw-bolder">₱500,000</h3>
+                <p class="mb-0 text-muted">Budget Limit</p>
               </div>
             </div>
 
             <div class="col-md-12">
               <div class="border rounded-4 p-4 bg-light-white text-muted">
-                <h4 class="fw-bold">Monthly Sales Overview</h4>
-                <div id="salesChart"></div>
+                <div class="d-flex justify-content-between">
+                  <h4 class="fw-bold">Monthly Sales</h4>
+                  <select
+                    id="chartTypeSelector"
+                    class="form-control w-25 text-muted"
+                  >
+                    <option value="bar">Show Bar Chart</option>
+                    <option value="line">Show Line Chart</option>
+                  </select>
+                </div>
+                <div class="chart-container1">
+                  <canvas id="salesChart"></canvas>
+                </div>
               </div>
             </div>
+
+            <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                let salesChart; // Store chart instance
+
+                function fetchSalesData(chartType = "bar") {
+                  fetch("/api/get-sales-sum")
+                    .then((response) => response.json())
+                    .then((data) => {
+                      const totalCapital =
+                        data.total_sales - data.total_earnings;
+                      document.getElementById(
+                        "totalEarnings"
+                      ).textContent = `₱${data.total_earnings.toLocaleString()}.00`;
+                      document.getElementById(
+                        "totalSales"
+                      ).textContent = `₱${data.total_sales.toLocaleString()}.00`;
+
+                      let months = Object.keys(data.monthly_sales).sort();
+                      let filteredMonths = [],
+                        earningsData = [],
+                        salesData = [],
+                        capitalData = [];
+
+                      months.forEach((month) => {
+                        let earnings = data.monthly_sales[month].earnings;
+                        let sales = data.monthly_sales[month].total_sales;
+                        let capital = sales - earnings;
+
+                        if (earnings > 0 || sales > 0 || capital > 0) {
+                          filteredMonths.push(month);
+                          earningsData.push(earnings);
+                          salesData.push(sales);
+                          capitalData.push(capital);
+                        }
+                      });
+
+                      if (filteredMonths.length === 0) {
+                        document.getElementById("salesChart").innerHTML =
+                          "<p class='text-muted'>No sales data available.</p>";
+                        return;
+                      }
+
+                      // Destroy existing chart before creating a new one
+                      if (salesChart) {
+                        salesChart.destroy();
+                      }
+
+                      let ctx = document
+                        .getElementById("salesChart")
+                        .getContext("2d");
+                      salesChart = new Chart(ctx, {
+                        type: chartType,
+                        data: {
+                          labels: filteredMonths,
+                          datasets: [
+                            {
+                              label: "Earnings",
+                              data: earningsData,
+                              backgroundColor:
+                                chartType === "bar"
+                                  ? "rgba(0, 128, 0, 0.6)"
+                                  : "transparent",
+                              borderColor: "green",
+                              borderWidth: 2,
+                              fill: chartType === "bar",
+                              borderRadius: 10, // Rounded top for bars
+                            },
+                            {
+                              label: "Total Sales",
+                              data: salesData,
+                              backgroundColor:
+                                chartType === "bar"
+                                  ? "rgba(0, 0, 255, 0.6)"
+                                  : "transparent",
+                              borderColor: "blue",
+                              borderWidth: 2,
+                              fill: chartType === "bar",
+                              borderRadius: 10, // Rounded top for bars
+                            },
+                            {
+                              label: "Capital (Total Sales - Earnings)",
+                              data: capitalData,
+                              backgroundColor:
+                                chartType === "bar"
+                                  ? "rgba(255, 165, 0, 0.6)"
+                                  : "transparent",
+                              borderColor: "orange",
+                              borderWidth: 2,
+                              fill: chartType === "bar",
+                              borderRadius: 10, // Rounded top for bars
+                            },
+                          ],
+                        },
+                        options: {
+                          responsive: true,
+                          maintainAspectRatio: false,
+                          scales: {
+                            y: { beginAtZero: true },
+                          },
+                          plugins: {
+                            legend: {
+                              labels: {
+                                usePointStyle: true, // Improves legend click response
+                              },
+                              onClick: (e, legendItem) => {
+                                const index = legendItem.datasetIndex;
+                                salesChart.data.datasets[index].hidden =
+                                  !salesChart.data.datasets[index].hidden;
+                                salesChart.update();
+                              },
+                            },
+                          },
+                        },
+                      });
+                    })
+                    .catch((error) =>
+                      console.error("Error fetching sales data:", error)
+                    );
+                }
+
+                // Load initial chart as bar chart
+                fetchSalesData();
+
+                // Change chart type on select
+                document
+                  .getElementById("chartTypeSelector")
+                  .addEventListener("change", function () {
+                    fetchSalesData(this.value);
+                  });
+              });
+            </script>
+
+            <div class="col-md-12">
+              <div class="border rounded-4 p-4 bg-light-white text-muted">
+                <h4 class="fw-bold">Sales Forecasting</h4>
+                <div class="chart-container">
+                  <canvas id="salesforecastChart"></canvas>
+                </div>
+              </div>
+
+              <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                  const ctx = document
+                    .getElementById("salesforecastChart")
+                    .getContext("2d");
+
+                  fetch("/api/get-sales-forecast")
+                    .then((response) => response.json())
+                    .then((data) => {
+                      new Chart(ctx, {
+                        type: "line",
+                        data: {
+                          labels: [...data.passdata.labels, ...data.labels], // Past + Future months in one line
+                          datasets: [
+                            {
+                              label: "Predicted Sales",
+                              data: [
+                                ...new Array(
+                                  data.passdata.total_sales.length
+                                ).fill(null),
+                                ...data.predicted_sales,
+                              ],
+                              borderColor: "yellow",
+                              backgroundColor: "rgba(255, 255, 0, 0.2)",
+                              fill: true,
+                            },
+                            {
+                              label: "Past Sales",
+                              data: [
+                                ...data.passdata.total_sales,
+                                ...new Array(data.labels.length).fill(null),
+                              ],
+                              borderColor: "blue",
+                              backgroundColor: "rgba(0, 0, 255, 0.2)",
+                              fill: true,
+                            },
+                          ],
+                        },
+                        options: {
+                          responsive: true,
+                          maintainAspectRatio: false,
+                          scales: {
+                            x: {
+                              type: "category",
+                              ticks: { autoSkip: true },
+                            },
+                            y: {
+                              min: 0,
+                              max:
+                                Math.max(
+                                  ...data.predicted_sales,
+                                  ...data.passdata.total_sales
+                                ) + 100,
+                              beginAtZero: true,
+                            },
+                          },
+                          plugins: {
+                            legend: {
+                              position: "top",
+                            },
+                          },
+                        },
+                      });
+                    })
+                    .catch((error) =>
+                      console.error("Error fetching data:", error)
+                    );
+                });
+              </script>
+            </div>
+
+            <div class="col-md-6">
+              <div class="border rounded-4 p-4 bg-light-white text-muted">
+                <h4 class="fw-bold">Top Selling Products</h4>
+                <div
+                  class="chart-container"
+                  style="position: relative; height: 500px; width: 100%"
+                >
+                  <canvas
+                    id="topProducts"
+                    style="width: 100%; height: 100%"
+                  ></canvas>
+                </div>
+              </div>
+            </div>
+
+            <script>
+              async function fetchTopProducts() {
+                try {
+                  const response = await fetch("/api/get-top-products");
+                  const data = await response.json();
+
+                  const productNames = data.top_products.map(
+                    (item) => item.product_name
+                  );
+                  const productCounts = data.top_products.map(
+                    (item) => item.count
+                  );
+
+                  const ctx = document
+                    .getElementById("topProducts")
+                    .getContext("2d");
+                  new Chart(ctx, {
+                    type: "doughnut",
+                    data: {
+                      labels: productNames,
+                      datasets: [
+                        {
+                          label: "Top Selling Products",
+                          data: productCounts,
+                          backgroundColor: [
+                            "rgba(255, 99, 132, 0.6)",
+                            "rgba(54, 162, 235, 0.6)",
+                            "rgba(255, 206, 86, 0.6)",
+                            "rgba(75, 192, 192, 0.6)",
+                            "rgba(153, 102, 255, 0.6)",
+                          ],
+                          borderWidth: 1,
+                        },
+                      ],
+                    },
+                    options: {
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      layout: {
+                        padding: {
+                          top: 10,
+                          bottom: 20,
+                        },
+                      },
+                      plugins: {
+                        legend: {
+                          display: true,
+                          position: "bottom",
+                          labels: {
+                            boxWidth: 12,
+                            padding: 15,
+                          },
+                        },
+                      },
+                    },
+                  });
+                } catch (error) {
+                  console.error("Error fetching top products:", error);
+                }
+              }
+
+              fetchTopProducts();
+            </script>
+
+            <div class="col-md-6">
+              <div class="border rounded-4 p-4 bg-light-white text-muted">
+                <h4 class="fw-bold">Budget per Department</h4>
+                <div
+                  class="chart-container"
+                  style="position: relative; height: 500px; width: 100%"
+                >
+                  <canvas
+                    id="budget_department"
+                    style="width: 100%; height: 100%"
+                  ></canvas>
+                </div>
+              </div>
+            </div>
+
+            <script>
+              document.addEventListener("DOMContentLoaded", function () {
+                fetch("/api/get-budget-department")
+                  .then((response) => response.json())
+                  .then((data) => {
+                    if (data.data.length === 0) {
+                      console.log("No data available.");
+                      return;
+                    }
+
+                    const departments = data.data.map(
+                      (item) => item.department
+                    );
+                    const amounts = data.data.map(
+                      (item) => item.total_requested
+                    );
+
+                    const ctx = document
+                      .getElementById("budget_department")
+                      .getContext("2d");
+
+                    new Chart(ctx, {
+                      type: "doughnut",
+                      data: {
+                        labels: departments,
+                        datasets: [
+                          {
+                            label: "Total Requested Budget",
+                            data: amounts,
+                            backgroundColor: [
+                              "rgba(255, 99, 132, 0.6)",
+                              "rgba(54, 162, 235, 0.6)",
+                              "rgba(255, 206, 86, 0.6)",
+                              "rgba(75, 192, 192, 0.6)",
+                              "rgba(153, 102, 255, 0.6)",
+                              "rgba(255, 159, 64, 0.6)",
+                            ],
+                            borderWidth: 1,
+                          },
+                        ],
+                      },
+                      options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                          legend: {
+                            position: "bottom",
+                            labels: {
+                              font: {
+                                size: 14,
+                              },
+                            },
+                          },
+                        },
+                      },
+                    });
+                  })
+                  .catch((error) =>
+                    console.error("Error fetching budget data:", error)
+                  );
+              });
+            </script>
 
             <!-- Budget Planning Approval -->
 
             <div class="col-md-12">
               <div class="border rounded-4 p-4 text-muted">
                 <h4 class="fw-bold">Budget Planning Approval</h4>
-                <div class="table-responsive">
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th><p>Department</p></th>
-                        <th><p>Requested Budget</p></th>
-                        <th><p>Status</p></th>
-                        <th><p>Action</p></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td><p>Admin</p></td>
-                        <td><p>₱500,000</p></td>
-                        <td>
-                          <p>
-                            <span class="badge bg-warning text-dark"
-                              >Pending</span
-                            >
-                          </p>
-                        </td>
-                        <td>
-                          <p>
-                            <button class="btn btn-sm btn-success">
-                              Approve
-                            </button>
-                            <button class="btn btn-sm btn-danger">
-                              Reject
-                            </button>
-                          </p>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td><p>HR</p></td>
-                        <td><p>₱250,000</p></td>
-                        <td>
-                          <p><span class="badge bg-success">Approved</span></p>
-                        </td>
-                        <td>
-                          <p>
-                            <button class="btn btn-sm btn-secondary" disabled>
-                              Approved
-                            </button>
-                          </p>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td><p>Logistics</p></td>
-                        <td><p>₱750,000</p></td>
-                        <td>
-                          <p><span class="badge bg-danger">Rejected</span></p>
-                        </td>
-                        <td>
-                          <p>
-                            <button class="btn btn-sm btn-secondary" disabled>
-                              Rejected
-                            </button>
-                          </p>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <div>
+                  <!-- Search Bar -->
+                  <div class="row">
+                    <div class="col-md-6">
+                      <input
+                        type="text"
+                        id="search-input"
+                        class="form-control"
+                        placeholder="Search Reference Number"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- Logistics Invoices Table -->
+                  <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                      <thead>
+                        <tr>
+                          <th
+                            style="width: 10%"
+                            class="sortable"
+                            data-sort="invoice_number"
+                          >
+                            <p>reference_number</p>
+                          </th>
+                          <th
+                            style="width: 10%"
+                            class="sortable"
+                            data-sort="po_id"
+                          >
+                            <p>requested_by</p>
+                          </th>
+                          <th
+                            style="width: 10%"
+                            class="sortable"
+                            data-sort="vendor_id"
+                          >
+                            <p>date_of_request</p>
+                          </th>
+                          <th
+                            style="width: 10%"
+                            class="sortable"
+                            data-sort="due_date"
+                          >
+                            <p>department</p>
+                          </th>
+                          <th
+                            style="width: 10%"
+                            class="sortable"
+                            data-sort="subtotal"
+                          >
+                            <p>email</p>
+                          </th>
+                          <th
+                            style="width: 10%"
+                            class="sortable"
+                            data-sort="tax_rate"
+                          >
+                            <p>status</p>
+                          </th>
+                          <th
+                            style="width: 5%"
+                            class="sortable text-end"
+                            data-sort="action"
+                          >
+                            Action
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody id="budget-table-body">
+                        <tr>
+                          <td colspan="10" class="text-center">
+                            Loading data...
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <!-- Per Page Selector and Pagination -->
+                  <div class="d-flex justify-content-between mt-2">
+                    <div class="per-page-select">
+                      <select id="per-page" class="form-select w-auto">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                      </select>
+                    </div>
+
+                    <nav>
+                      <ul class="pagination">
+                        <li class="page-item">
+                          <button class="page-link text-muted" id="prev-page">
+                            Previous
+                          </button>
+                        </li>
+                        <li class="page-item">
+                          <span class="page-link text-muted" id="page-info"
+                            >Page 1</span
+                          >
+                        </li>
+                        <li class="page-item">
+                          <button class="page-link text-muted" id="next-page">
+                            Next
+                          </button>
+                        </li>
+                      </ul>
+                    </nav>
+                  </div>
                 </div>
               </div>
             </div>
@@ -129,48 +575,6 @@
     </div>
 
     {% include 'components/footer.html' %}
-
-    <!-- ApexCharts Script -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        var options = {
-          series: [
-            {
-              name: "Sales",
-              data: [
-                150000, 180000, 220000, 300000, 280000, 350000, 400000, 450000,
-                480000, 500000, 550000, 600000,
-              ],
-            },
-          ],
-          chart: {
-            type: "line",
-            height: 350,
-          },
-          xaxis: {
-            categories: [
-              "Jan",
-              "Feb",
-              "Mar",
-              "Apr",
-              "May",
-              "Jun",
-              "Jul",
-              "Aug",
-              "Sep",
-              "Oct",
-              "Nov",
-              "Dec",
-            ],
-          },
-        };
-
-        var chart = new ApexCharts(
-          document.querySelector("#salesChart"),
-          options
-        );
-        chart.render();
-      });
-    </script>
+    <script src="{{ url_for('static', filename='js/get_budget.js') }}"></script>
   </body>
 </html>

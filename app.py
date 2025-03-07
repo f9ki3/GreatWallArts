@@ -2,9 +2,12 @@ from flask import Flask, render_template, request, jsonify, session, redirect, u
 import requests
 import firebase_admin
 from firebase_admin import credentials, db, firestore
-from datetime import datetime  # Ensure correct datetime import
+from datetime import datetime, timedelta # Ensure correct datetime import
 import uuid
-
+from collections import defaultdict, Counter
+import pandas as pd
+import numpy as np
+from statsmodels.tsa.arima.model import ARIMA
 
 # Initialize Firebase
 # cred = credentials.Certificate("account_key.json")
@@ -20,6 +23,13 @@ app.secret_key = '#@jhkasjahs'  # Required for session management
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('/pages/404.html'), 404
+
+@app.route('/firebase-config')
+def get_firebase_config():
+    import json
+    with open('account_key.json') as f:
+        config = json.load(f)
+    return jsonify(config)
 
 @app.route('/')
 def RouteLogin():
@@ -40,6 +50,76 @@ def my_account():
         return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
     return render_template('pages/my_account.html', user = session['user'])  # Show dashboard if logged in
 
+def get_last_12_months():
+    """Returns a set of the last 12 months in YYYY-MM format."""
+    today = datetime.today()
+    return { (today - timedelta(days=30 * i)).strftime("%Y-%m") for i in range(12) }
+
+@app.route('/api/get-top-products', methods=['GET'])
+def get_top_products():
+    sales_ref = db.reference("sales")
+    sales_data = sales_ref.get()
+
+    product_counts = Counter()
+
+    if sales_data:
+        for sale_id, sale in sales_data.items():
+            cart_items = sale.get("cart_items", [])  # Ensure cart_items is a list
+            if isinstance(cart_items, list):  # Check if cart_items is a list
+                for item in cart_items:
+                    product_name = item.get("product_name")
+                    if product_name:
+                        product_counts[product_name] += 1
+
+    # Get top 5 most sold products
+    top_products = product_counts.most_common(5)
+
+    return jsonify({"top_products": [{"product_name": name, "count": count} for name, count in top_products]})
+
+
+@app.route('/api/get-sales-sum', methods=['GET'])
+def get_sales_sum():
+    sales_ref = db.reference("sales")
+    sales_data = sales_ref.get()
+
+    if not sales_data:
+        return jsonify({"message": "No sales data found"}), 404
+
+    total_earnings = 0
+    total_sales = 0
+    monthly_sales = defaultdict(lambda: {"earnings": 0, "total_sales": 0})
+    last_12_months = get_last_12_months()
+
+    for sale in sales_data.values():
+        earnings = sale.get("earnings", 0)
+        total_sum = sale.get("total_sum", 0)
+        timestamp = sale.get("timestamp", "")
+
+        try:
+            sale_date = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
+            month_key = sale_date.strftime("%Y-%m")
+            
+            if month_key in last_12_months:
+                total_earnings += earnings
+                total_sales += total_sum
+                monthly_sales[month_key]["earnings"] += earnings
+                monthly_sales[month_key]["total_sales"] += total_sum
+        except ValueError:
+            continue  # Skip invalid timestamps
+    
+    # Ensure all 12 months are present, even if they have 0 values
+    for month in last_12_months:
+        if month not in monthly_sales:
+            monthly_sales[month] = {"earnings": 0, "total_sales": 0}
+    
+    # Sort by month in descending order (latest first)
+    sorted_monthly_sales = dict(sorted(monthly_sales.items(), reverse=True))
+    
+    return jsonify({
+        "total_earnings": total_earnings,
+        "total_sales": total_sales,
+        "monthly_sales": sorted_monthly_sales
+    })
 
 
 @app.route('/reports')
@@ -154,6 +234,51 @@ def update_session(edit_id):
     except requests.exceptions.RequestException as e:
         return jsonify({"error": str(e)}), 500  # Handle request errors
 
+@app.route('/api/get-sales-forecast', methods=['GET'])
+def get_sales_forecast():
+    sales_ref = db.reference("sales")
+    sales_data = sales_ref.get()
+
+    if not sales_data:
+        return jsonify({"message": "No sales data found"}), 404
+
+    monthly_sales = {}
+
+    # Process past sales data
+    for sale in sales_data.values():
+        total_sum = sale.get("total_sum", 0)
+        timestamp = sale.get("timestamp", "")
+
+        try:
+            sale_date = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
+            month_key = sale_date.strftime("%Y-%m")  # Format: YYYY-MM
+            if month_key not in monthly_sales:
+                monthly_sales[month_key] = {"total_sales": 0}
+            monthly_sales[month_key]["total_sales"] += total_sum
+        except ValueError:
+            continue
+
+    df = pd.DataFrame.from_dict(monthly_sales, orient="index").sort_index()
+    df.index = pd.to_datetime(df.index)
+
+    # Train ARIMA Model for sales prediction
+    arima_sales = ARIMA(df["total_sales"], order=(2,1,2)).fit()
+    sales_forecast = arima_sales.forecast(steps=12)
+
+    # Generate the next 12 months
+    last_month = df.index[-1]
+    future_months = [(last_month + pd.DateOffset(months=i)).strftime("%Y-%m") for i in range(1, 13)]
+
+    forecast_data = {
+        "labels": future_months,
+        "predicted_sales": [round(sales_forecast.iloc[i], 2) for i in range(12)],
+        "passdata": {
+            "labels": list(df.index.strftime("%Y-%m")),
+            "total_sales": df["total_sales"].tolist()
+        }
+    }
+
+    return jsonify(forecast_data)
 
 # GET /api/get-sales
 # GET /api/get-sales?sort_by=total_sum&order=asc | total_sum, earnings, or timestamp
@@ -211,6 +336,7 @@ def get_sales():
         "sales": paginated_sales
     })
 
+
 @app.route('/api/sales-reports', methods=['GET'])
 def get_sales_reports():
     # Reference to the "sales" collection
@@ -256,6 +382,8 @@ def get_sales_reports():
         "summary_report": summary_report,
         "sales invoices": sales_list
     })
+
+    
 
 #POST api/generate-sales
 # {
@@ -438,6 +566,37 @@ def get_logistics_reports():
         "summary_report": summary_report,
         "logistics invoices": filtered_logistics
     }), 200
+
+@app.route('/api/get-budget-department', methods=['GET'])
+def get_budget_department():
+    # Reference to "budget" collection in Firebase
+    budget_ref = db.reference("budget")
+    budget_data = budget_ref.get()
+
+    if not budget_data:
+        return jsonify({"message": "No budget data found", "data": []}), 404
+
+    department_summary = {}
+
+    for key, budget in budget_data.items():
+        department = budget.get("department", "Unknown")
+        budget_details = budget.get("budget_details", [])
+
+        # Ensure budget_details is a list before iterating
+        if isinstance(budget_details, list):
+            total_requested = sum(int(detail.get("amount", 0)) for detail in budget_details if isinstance(detail.get("amount", 0), (int, str)))
+        else:
+            total_requested = 0
+
+        if department in department_summary:
+            department_summary[department] += total_requested
+        else:
+            department_summary[department] = total_requested
+
+    response_data = [{"department": dept, "total_requested": total} for dept, total in department_summary.items()]
+
+    return jsonify({"message": "Budget summary by department", "data": response_data}), 200
+
 
 @app.route('/api/get-budget', methods=['GET'])
 def get_budget():
