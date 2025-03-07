@@ -2,9 +2,11 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 
 # Initialize Firebase
-cred = credentials.Certificate("account_key.jsonn")  # Change to your actual file name
-firebase_admin.initialize_app(cred)
-
+cred = credentials.Certificate("account_key.json")
+# cred = credentials.Certificate("/etc/secrets/account_key.json")
+firebase_admin.initialize_app(cred, {
+    "databaseURL": "https://finance-department-3f0ba-default-rtdb.asia-southeast1.firebasedatabase.app/"
+})
 # Get Firestore database reference
 db = firestore.client()
 
