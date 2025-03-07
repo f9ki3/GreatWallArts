@@ -45,6 +45,28 @@
             <label for="floatingPassword" class="small-label">Password</label>
           </div>
 
+          <div class="w-100 d-flex justify-content-start">
+            <div class="form-group mt-3">
+              <input
+                id="show-password-account"
+                type="checkbox"
+                class="form-check-input"
+              />
+              <label for="show-password-account" class="form-check-label ms-2">
+                Show Password
+              </label>
+            </div>
+          </div>
+
+          <script>
+            document
+              .getElementById("show-password-account")
+              .addEventListener("change", function () {
+                let passwordField = document.getElementById("floatingPassword");
+                passwordField.type = this.checked ? "text" : "password";
+              });
+          </script>
+
           <button
             id="btn-login"
             onclick="login()"
