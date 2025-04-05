@@ -4,6 +4,8 @@ $(document).ready(function () {
   let perPage = parseInt($("#per-page").val());
   let searchQuery = "";
   let totalPages = 1;
+  let searchDate = "";
+  let searchTimeout; // To store the timeout for debouncing
 
   // Update pagination controls
   function updatePaginationControls() {
@@ -15,7 +17,8 @@ $(document).ready(function () {
 
   // Load accounts with pagination, search, and sorting by date
   function loadAccounts() {
-    let apiUrl = `/api/get-accounts?page=${currentPage}&per_page=${perPage}&sort=${sortOrder}&sort_by=date`;
+    let apiUrl = `/api/get-accounts-balance?page=${currentPage}&per_page=${perPage}&sort=${sortOrder}&sort_by=date`;
+    if (searchDate) apiUrl += `&search_date=${searchDate}`;
     if (searchQuery) apiUrl += `&search=${searchQuery}`;
 
     $.ajax({
@@ -48,21 +51,23 @@ $(document).ready(function () {
         // Render accounts
         sortedData.forEach((item) => {
           tableBody.append(`
-            <tr>
-              <td><p class="mt-2">${item.reference}</p></td>
+            <tr class="account-row" data-date="${item.date}">
               <td><p class="mt-2">${item.date}</p></td>
-              <td><p class="mt-2">${item.account_type}</p></td>
-              <td><p class="mt-2">${item.account_name}</p></td>
-              <td><p class="mt-2">${item.credit}</p></td>
-              <td><p class="mt-2">${item.debit}</p></td>
-              <td><p class="mt-2">${item.description}</p></td>
-              <td class="text-end">
-                <button class="btn btn-sm delete-account" data-id="${item.id}">
-                  <i class="bi bi-trash"></i>
-                </button>
-              </td>
+              <td><p class="mt-2">${item.net_balance}</p></td>
+              <td><p class="mt-2">${item.total_credit}</p></td>
+               <td class="text-end"><p class="mt-2">${item.total_debit}</p></td>
             </tr>
           `);
+        });
+
+        // Add event listeners for click and hover
+        $(".account-row").on("click", function () {
+          let date = $(this).data("date");
+          window.location.href = `/view_balance?date=${date}`;
+        });
+
+        $(".account-row").on("mouseenter", function () {
+          $(this).css("cursor", "pointer");
         });
       },
       error: function () {
@@ -95,9 +100,21 @@ $(document).ready(function () {
     loadAccounts();
   });
 
-  // Search input functionality
+  // Real-time search input functionality with debounce
   $("#search-input").on("input", function () {
+    clearTimeout(searchTimeout); // Clear the previous timeout
     searchQuery = $(this).val();
+    currentPage = 1;
+
+    // Set a new timeout for the search query
+    searchTimeout = setTimeout(function () {
+      loadAccounts(); // Call loadAccounts after a delay
+    }, 500); // 500ms delay to debounce
+  });
+
+  // Date filter search functionality
+  $("#search-date").on("change", function () {
+    searchDate = $(this).val(); // Get the selected date
     currentPage = 1;
     loadAccounts();
   });

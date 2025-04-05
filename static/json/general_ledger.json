@@ -1,162 +1,164 @@
 [
   {
-    "date": "2025-03-05",
-    "account": "Art Supplies Expense",
-    "debit": 4500.0,
-    "credit": 0.0,
-    "description": "Purchase of high-quality brushes and paint for artwork",
-    "reference": "REF20250305-001"
-  },
-  {
-    "date": "2025-03-05",
-    "account": "Gadget Manufacturing Expense",
-    "debit": 3000.0,
-    "credit": 0.0,
-    "description": "Acquisition of components for the next gadget release",
-    "reference": "REF20250305-002"
-  },
-  {
-    "date": "2025-03-05",
-    "account": "Salaries Expense",
-    "debit": 0.0,
-    "credit": 13000.0,
-    "description": "Salaries for art department and gadget engineers",
-    "reference": "REF20250305-003"
-  },
-  {
-    "date": "2025-03-05",
-    "account": "Marketing Expense",
+    "date": "2025-03-01 03:15:30",
+    "account_type": "Assets",
+    "account_name": "Art Supplies Inventory",
     "debit": 5000.0,
     "credit": 0.0,
-    "description": "Advertising costs for upcoming art and gadget collection",
-    "reference": "REF20250305-004"
+    "description": "Purchase of premium-grade brushes and paints for inventory expansion",
+    "reference": "REF20250301-001"
   },
   {
-    "date": "2025-03-05",
-    "account": "Revenue from Gadget Sales",
+    "date": "2025-03-01 12:42:15",
+    "account_type": "Equity",
+    "account_name": "Owner's Equity",
     "debit": 0.0,
-    "credit": 25000.0,
-    "description": "Sales from newly launched gadget models",
+    "credit": 3500.0,
+    "description": "Owner's contribution towards purchasing art supplies",
+    "reference": "REF20250301-001"
+  },
+  {
+    "date": "2025-03-01 18:09:45",
+    "account_type": "Liabilities",
+    "account_name": "Accounts Payable",
+    "debit": 0.0,
+    "credit": 1500.0,
+    "description": "Amount owed for the purchase of art supplies",
+    "reference": "REF20250301-001"
+  },
+  {
+    "date": "2025-03-02 10:21:50",
+    "account_type": "Assets",
+    "account_name": "Gadget Components Inventory",
+    "debit": 6000.0,
+    "credit": 0.0,
+    "description": "Acquisition of electronic components for upcoming product line",
+    "reference": "REF20250302-002"
+  },
+  {
+    "date": "2025-03-02 14:15:20",
+    "account_type": "Equity",
+    "account_name": "Owner's Equity",
+    "debit": 0.0,
+    "credit": 4000.0,
+    "description": "Owner's contribution towards gadget components purchase",
+    "reference": "REF20250302-002"
+  },
+  {
+    "date": "2025-03-02 20:30:05",
+    "account_type": "Liabilities",
+    "account_name": "Accounts Payable",
+    "debit": 0.0,
+    "credit": 2000.0,
+    "description": "Amount owed for the purchase of gadget components",
+    "reference": "REF20250302-002"
+  },
+  {
+    "date": "2025-03-03 07:12:25",
+    "account_type": "Assets",
+    "account_name": "Accounts Receivable",
+    "debit": 16000.0,
+    "credit": 0.0,
+    "description": "Revenue expected for services rendered by the team in the previous month",
+    "reference": "REF20250303-003"
+  },
+  {
+    "date": "2025-03-03 16:35:10",
+    "account_type": "Equity",
+    "account_name": "Retained Earnings",
+    "debit": 0.0,
+    "credit": 11000.0,
+    "description": "Transfer of monthly net income to retained earnings",
+    "reference": "REF20250303-003"
+  },
+  {
+    "date": "2025-03-03 21:48:45",
+    "account_type": "Liabilities",
+    "account_name": "Salaries Payable",
+    "debit": 0.0,
+    "credit": 5000.0,
+    "description": "Outstanding salaries owed to employees for the last payroll cycle",
+    "reference": "REF20250303-003"
+  },
+  {
+    "date": "2025-03-04 05:09:35",
+    "account_type": "Assets",
+    "account_name": "Advertising Materials",
+    "debit": 7000.0,
+    "credit": 0.0,
+    "description": "Expenditure for promotional material to market upcoming product launch",
+    "reference": "REF20250304-004"
+  },
+  {
+    "date": "2025-03-04 11:34:10",
+    "account_type": "Equity",
+    "account_name": "Owner's Equity",
+    "debit": 0.0,
+    "credit": 4500.0,
+    "description": "Owner's contribution to marketing fund for promotional campaign",
+    "reference": "REF20250304-004"
+  },
+  {
+    "date": "2025-03-04 19:22:25",
+    "account_type": "Liabilities",
+    "account_name": "Accounts Payable",
+    "debit": 0.0,
+    "credit": 2500.0,
+    "description": "Amount owed for outsourced advertising services",
+    "reference": "REF20250304-004"
+  },
+  {
+    "date": "2025-03-05 02:47:00",
+    "account_type": "Assets",
+    "account_name": "Cash",
+    "debit": 30000.0,
+    "credit": 0.0,
+    "description": "Revenue from sales of newly launched gadgets",
     "reference": "REF20250305-005"
   },
   {
-    "date": "2025-03-05",
-    "account": "Art Installation Expenses",
-    "debit": 4000.0,
-    "credit": 0.0,
-    "description": "Costs associated with art exhibitions and installations",
-    "reference": "REF20250305-006"
-  },
-  {
-    "date": "2025-03-05",
-    "account": "Gadget Assembly Costs",
-    "debit": 2500.0,
-    "credit": 0.0,
-    "description": "Labor costs for assembling gadgets",
-    "reference": "REF20250305-007"
-  },
-  {
-    "date": "2025-03-05",
-    "account": "Packaging Expense",
-    "debit": 1500.0,
-    "credit": 0.0,
-    "description": "Packaging materials for gadgets and artwork",
-    "reference": "REF20250305-008"
-  },
-  {
-    "date": "2025-03-05",
-    "account": "Legal Fees Expense",
-    "debit": 2000.0,
-    "credit": 0.0,
-    "description": "Legal services for intellectual property rights protection",
-    "reference": "REF20250305-009"
-  },
-  {
-    "date": "2025-03-05",
-    "account": "Equipment Rental Expense",
-    "debit": 3500.0,
-    "credit": 0.0,
-    "description": "Rental of equipment for art production",
-    "reference": "REF20250305-010"
-  },
-  {
-    "date": "2025-03-05",
-    "account": "Inventory Purchase Expense",
-    "debit": 5000.0,
-    "credit": 0.0,
-    "description": "Purchase of raw materials for gadgets and art",
-    "reference": "REF20250305-011"
-  },
-  {
-    "date": "2025-03-05",
-    "account": "Art Licensing Fees",
-    "debit": 2200.0,
-    "credit": 0.0,
-    "description": "Licensing fees for using art in commercial projects",
-    "reference": "REF20250305-012"
-  },
-  {
-    "date": "2025-03-05",
-    "account": "Employee Bonus Expense",
+    "date": "2025-03-05 13:21:15",
+    "account_type": "Equity",
+    "account_name": "Owner's Equity",
     "debit": 0.0,
-    "credit": 15000.0,
-    "description": "Annual bonuses for artists and engineers",
-    "reference": "REF20250305-013"
+    "credit": 20000.0,
+    "description": "Owner's share of profit from the gadget sales",
+    "reference": "REF20250305-005"
   },
   {
-    "date": "2025-03-05",
-    "account": "Facility Rent Expense",
-    "debit": 4000.0,
-    "credit": 0.0,
-    "description": "Rent for art studio and gadget production facility",
-    "reference": "REF20250305-014"
-  },
-  {
-    "date": "2025-03-05",
-    "account": "Research & Development Expense",
-    "debit": 3000.0,
-    "credit": 0.0,
-    "description": "Costs for developing new gadgets and artwork concepts",
-    "reference": "REF20250305-015"
-  },
-  {
-    "date": "2025-03-05",
-    "account": "Utility Expense",
-    "debit": 1500.0,
-    "credit": 0.0,
-    "description": "Electricity and water bills for production facilities",
-    "reference": "REF20250305-016"
-  },
-  {
-    "date": "2025-03-05",
-    "account": "Shipment Expense",
-    "debit": 2200.0,
-    "credit": 0.0,
-    "description": "Shipping costs for delivering art pieces and gadgets",
-    "reference": "REF20250305-017"
-  },
-  {
-    "date": "2025-03-05",
-    "account": "Equipment Depreciation Expense",
-    "debit": 1000.0,
-    "credit": 0.0,
-    "description": "Depreciation on art and gadget production equipment",
-    "reference": "REF20250305-018"
-  },
-  {
-    "date": "2025-03-05",
-    "account": "Bank Loan Repayment",
+    "date": "2025-03-05 23:55:40",
+    "account_type": "Liabilities",
+    "account_name": "Sales Tax Payable",
     "debit": 0.0,
     "credit": 10000.0,
-    "description": "Repayment of bank loan for business expansion",
-    "reference": "REF20250305-019"
+    "description": "Sales tax Liabilities for gadgets sold this month",
+    "reference": "REF20250305-005"
   },
   {
-    "date": "2025-03-05",
-    "account": "Sales Tax Payable",
+    "date": "2025-03-06 06:18:10",
+    "account_type": "Assets",
+    "account_name": "Exhibition Equipment",
+    "debit": 6000.0,
+    "credit": 0.0,
+    "description": "Rental of equipment for art and gadget exhibition",
+    "reference": "REF20250306-006"
+  },
+  {
+    "date": "2025-03-06 15:01:50",
+    "account_type": "Equity",
+    "account_name": "Owner's Equity",
     "debit": 0.0,
-    "credit": 5000.0,
-    "description": "Sales tax on art and gadget sales",
-    "reference": "REF20250305-020"
+    "credit": 4000.0,
+    "description": "Owner's funding for the exhibition event",
+    "reference": "REF20250306-006"
+  },
+  {
+    "date": "2025-03-06 20:27:35",
+    "account_type": "Liabilities",
+    "account_name": "Accounts Payable",
+    "debit": 0.0,
+    "credit": 2000.0,
+    "description": "Amount owed for exhibition equipment rental",
+    "reference": "REF20250306-006"
   }
 ]

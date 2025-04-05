@@ -6,6 +6,7 @@ from datetime import datetime, timedelta # Ensure correct datetime import
 import uuid
 from collections import defaultdict, Counter
 import pandas as pd
+import math
 import numpy as np
 from statsmodels.tsa.arima.model import ARIMA
 
@@ -37,11 +38,24 @@ def RouteLogin():
         return render_template('pages/index.html')       
     return redirect(url_for('dashboard'))
 
+
 @app.route('/sales')
 def sales():
     if 'user' not in session:  # Check if user is logged in
         return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
     return render_template('pages/sales.html')  # Show dashboard if logged in
+
+@app.route('/view_balance')
+def view_balance():
+    if 'user' not in session:  # Check if user is logged in
+        return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
+    return render_template('pages/view_balance.html')  # Show dashboard if logged in
+
+@app.route('/balance-sheet')
+def balance_sheet():
+    if 'user' not in session:  # Check if user is logged in
+        return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
+    return render_template('pages/balance-sheet.html')  # Show dashboard if logged in
 
 @app.route('/reports-sales')
 def reports_sales():
@@ -1042,6 +1056,126 @@ def get_accounts():
         "total_pages": (total_records + per_page - 1) // per_page,  # Calculate total pages
         "data": paginated_accounts
     })
+@app.route('/api/get-balance-date', methods=['GET'])
+def get_accounts_balance():
+    """Fetch accounts from the general ledger filtered by date and return in specific format."""
+    
+    # Get the 'date' parameter from the request (if available)
+    date_filter = request.args.get('date')
+    
+    # Fetch the data from the 'general_ledger' reference
+    accounts_ref = db.reference("general_ledger")
+    accounts_data = accounts_ref.get()
+
+    # If a date is provided, filter the data based on the date
+    if date_filter:
+        # Parse the filter date to match the format stored in the database
+        try:
+            filter_date = datetime.strptime(date_filter, '%Y-%m-%d').date()
+        except ValueError:
+            return jsonify({"error": "Invalid date format. Use 'YYYY-MM-DD'."}), 400
+        
+        # Filter data based on the date
+        filtered_data = [
+            {
+                "account_name": value.get("account_name"),
+                "account_type": value.get("account_type"),
+                "credit": value.get("credit"),
+                "date": value.get("date"),
+                "debit": value.get("debit"),
+                "description": value.get("description"),
+                "reference": value.get("reference")
+            }
+            for key, value in accounts_data.items()
+            if datetime.strptime(value.get('date', '').split(' ')[0], '%Y-%m-%d').date() == filter_date
+        ]
+    else:
+        # If no date filter is provided, return all data
+        filtered_data = [
+            {
+                "account_name": value.get("account_name"),
+                "account_type": value.get("account_type"),
+                "credit": value.get("credit"),
+                "date": value.get("date"),
+                "debit": value.get("debit"),
+                "description": value.get("description"),
+                "reference": value.get("reference")
+            }
+            for key, value in accounts_data.items()
+        ]
+
+    # Return the filtered data as a JSON response
+    return jsonify(filtered_data)
+
+@app.route('/api/get-accounts-balance', methods=['GET'])
+def get_accounts_balance_date():
+    """Fetch accounts from the general ledger with sums grouped by date, allowing for specific date search and pagination."""
+    
+    # Get the query parameters for specific date search and pagination
+    search_date = request.args.get('search_date')  # Specific date (e.g., '2025-03-06')
+    page = int(request.args.get('page', 1))  # Page number (default to 1)
+    page_size = int(request.args.get('page_size', 10))  # Number of entries per page (default to 10)
+
+    # Fetch the data from Firebase
+    accounts_ref = db.reference("general_ledger")
+    accounts_data = accounts_ref.get()
+
+    # Initialize a dictionary to store the results
+    result = {}
+
+    # Ensure accounts_data is a dictionary (in case it's a list, iterate over it)
+    if isinstance(accounts_data, dict):
+        accounts_entries = accounts_data.values()  # This assumes the data is stored as a dictionary
+    else:
+        accounts_entries = accounts_data  # Already in a list format
+
+    # Iterate through each account entry and sum the values
+    for entry in accounts_entries:
+        # Check if the entry is a dictionary (to avoid errors if the data is malformed)
+        if isinstance(entry, dict):
+            date = entry.get('date').split(" ")[0]  # Get the date part (remove time)
+            debit = entry.get('debit', 0)
+            credit = entry.get('credit', 0)
+
+            # Apply specific date filtering if provided
+            if search_date and date != search_date:
+                continue
+
+            # Initialize the date in the result dictionary if not already present
+            if date not in result:
+                result[date] = {'total_debit': 0, 'total_credit': 0}
+
+            # Update the debit and credit totals for the specific date
+            result[date]['total_debit'] += debit
+            result[date]['total_credit'] += credit
+
+    # Convert the result into a response-friendly format
+    response = []
+    for date, totals in result.items():
+        response.append({
+            'date': date,
+            'total_debit': totals['total_debit'],
+            'total_credit': totals['total_credit'],
+            'net_balance': totals['total_debit'] - totals['total_credit']  # Net balance calculation
+        })
+
+    # Pagination logic
+    total_entries = len(response)
+    total_pages = math.ceil(total_entries / page_size)
+    start_index = (page - 1) * page_size
+    end_index = start_index + page_size
+    paginated_response = response[start_index:end_index]
+
+    # Add pagination info to the response
+    return jsonify({
+        'page': page,
+        'total_pages': total_pages,
+        'total_entries': total_entries,
+        'page_size': page_size,
+        'data': paginated_response
+    })
+
+
 
 @app.route('/api/delete-accounts/<key>', methods=['DELETE'])
 def delete_account(key):
