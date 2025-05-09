@@ -13,6 +13,7 @@ from statsmodels.tsa.arima.model import ARIMA
 # Initialize Firebase
 # cred = credentials.Certificate("account_key.json")
 cred = credentials.Certificate("/etc/secrets/account_key.json")
+
 firebase_admin.initialize_app(cred, {
     "databaseURL": "https://finance-department-3f0ba-default-rtdb.asia-southeast1.firebasedatabase.app/"
 })
@@ -180,6 +181,12 @@ def budget():
     if 'user' not in session:  # Check if user is logged in
         return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
     return render_template('pages/budget.html')  # Show dashboard if logged in
+
+@app.route('/approve-budget')
+def approve_budget():
+    if 'user' not in session:  # Check if user is logged in
+        return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
+    return render_template('pages/approve-budget.html')  # Show dashboard if logged in
 
 @app.route('/logistics')
 def logistics():
@@ -788,6 +795,64 @@ def get_budget():
 
     # Convert dictionary to list of budget records
     budget_list = list(budget_data.values())
+
+    # Filter out budgets with status "approved"
+    budget_list = [item for item in budget_list if item.get("status", "").lower() != ""]
+
+    # If searching by reference_number
+    if reference_number:
+        filtered_data = [item for item in budget_list if item.get("reference_number") == reference_number]
+        return jsonify({
+            "search": reference_number,
+            "total_items": len(filtered_data),
+            "data": filtered_data
+        })
+
+    # Sort the data
+    valid_sort_fields = ["reference_number", "requested_by", "date_of_request", "department", "email", "status"]
+    if sort_by in valid_sort_fields:
+        budget_list = sorted(budget_list, key=lambda x: x.get(sort_by, ""), reverse=(order == "desc"))
+
+    # Pagination logic
+    total_items = len(budget_list)
+    total_pages = (total_items + per_page - 1) // per_page
+    start = (page - 1) * per_page
+    end = start + per_page
+    paginated_data = budget_list[start:end]
+
+    return jsonify({
+        "page": page,
+        "per_page": per_page,
+        "total_items": total_items,
+        "total_pages": total_pages,
+        "sort_by": sort_by,
+        "order": order,
+        "data": paginated_data
+    })
+
+@app.route('/api/get-budget-approved', methods=['GET'])
+def get_budgets():
+    # Get query parameters
+   # Get query parameters
+    page = request.args.get('page', default=1, type=int)
+    per_page = request.args.get('per_page', default=10, type=int)
+    reference_number = request.args.get('reference_number', default=None, type=str)
+    sort_by = request.args.get('sort_by', default="date_of_request", type=str)
+    order = request.args.get('order', default="desc", type=str).lower()
+
+    # Reference to "budget" collection in Firebase
+    budget_ref = db.reference("budget")
+    budget_data = budget_ref.get()
+
+    if not budget_data:
+        return jsonify({"message": "No budget data found", "data": []}), 200
+
+    # Convert dictionary to list of budget records
+    budget_list = list(budget_data.values())
+
+    # Filter out budgets with status "approved"
+    budget_list = [item for item in budget_list if item.get("status", "").lower() not in ["pending", "declined"]]
+
 
     # If searching by reference_number
     if reference_number:

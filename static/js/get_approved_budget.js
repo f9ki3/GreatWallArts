@@ -9,45 +9,35 @@ $(document).ready(function () {
     switch (status.toLowerCase()) {
       case "pending":
         return '<span class="badge bg-warning text-dark">Pending</span>';
-      case "declined":
-        return '<span class="badge bg-danger">Declined</span>';
+      case "approved":
+        return '<span class="badge bg-success">Approved</span>';
       default:
-        return ""; // Exclude "approved" status from being shown
+        return '<span class="badge bg-danger">Declined</span>';
     }
   }
 
   function fetchBudgetRequests() {
     let searchRef = $("#search-input").val().trim();
-    let apiUrl = `/api/get-budget?page=${page}&per_page=${perPage}&sort=${sortField}&order=${sortOrder}`;
+    let apiUrl = `/api/get-budget-approved?page=${page}&per_page=${perPage}&sort=${sortField}&order=${sortOrder}`;
 
     if (searchRef) {
       apiUrl = `/api/get-budget?reference_number=${searchRef}`;
     }
 
     $.get(apiUrl, function (response) {
+      // console.log(response);
       let requests = response.data;
       let totalPages = response.total_pages || 1;
       $("#page-info").text(`Page ${page} of ${totalPages}`);
 
-      // Filter out requests with "approved" status and store them in a JSON object
-      let filteredRequests = requests.filter(
-        (request) => request.status.toLowerCase() !== "approved"
-      );
-
-      // Store filtered data as a JSON object (can be accessed later)
-      let filteredRequestsJson = JSON.stringify(filteredRequests);
-
-      // Optionally, log the JSON object for debugging
-      console.log(filteredRequestsJson);
-
-      if (filteredRequests.length === 0) {
+      if (requests.length === 0) {
         $("#budget-table-body").html(
           '<tr><td colspan="7" class="text-center"><p>No budget requests found</p></td></tr>'
         );
         return;
       }
 
-      let tableRows = filteredRequests
+      let tableRows = requests
         .map(
           (request) => `
           <tr class="selectable-row" data-id="${request.id}">
@@ -69,7 +59,6 @@ $(document).ready(function () {
         )
         .join("");
 
-      // Update the table body with the filtered requests
       $("#budget-table-body").html(tableRows);
     }).fail(function () {
       $("#budget-table-body").html(
