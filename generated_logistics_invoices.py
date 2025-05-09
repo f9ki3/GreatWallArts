@@ -89,8 +89,8 @@ def generate_invoices():
     """ Generate invoices for every day from Jan 1 to Dec 31, 2024. """
     products = load_products()
     invoices = []
-    start_date = datetime(2024, 1, 1)
-    end_date = datetime(2024, 12, 31)
+    start_date = datetime(2025, 1, 1)
+    end_date = datetime(2025, 12, 31)
     days = (end_date - start_date).days + 1  # 366 days (leap year)
 
     for i in range(days):

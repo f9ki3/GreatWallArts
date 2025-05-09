@@ -35,10 +35,43 @@
   font-size: 20px;
 }
 
+.nav1 {
+  width: 20%;
+  height: 100vh;
+  font-size: 14px;
+  background-color: #ffffff;
+}
+
+/* Ensure responsiveness */
+.chart-container {
+  width: 100%;
+  max-width: 100%;
+}
+
+#invoiceAreaChart {
+  width: 100% !important;
+  height: auto !important;
+}
+
+@media print {
+  .nav2 {
+    display: none;
+  }
+  .nav1 {
+    display: none;
+  }
+  .prnt {
+    display: none !important;
+  }
+}
 /* Hide the sidebar on screens smaller than or equal to 768px */
 @media screen and (max-width: 1000px) {
   .gwa-sidebar {
     display: none;
+  }
+  .header-prnt {
+    display: flex !important;
+    flex-direction: column !important;
   }
   p {
     font-size: 12px;

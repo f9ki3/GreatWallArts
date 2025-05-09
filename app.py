@@ -45,6 +45,13 @@ def sales():
         return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
     return render_template('pages/sales.html')  # Show dashboard if logged in
 
+
+@app.route('/summary_report')
+def summary():
+    if 'user' not in session:  # Check if user is logged in
+        return redirect(url_for('RouteLogin'))  # Redirect to login if not logged in
+    return render_template('pages/summary.html')  # Show dashboard if logged in
+
 @app.route('/view_balance')
 def view_balance():
     if 'user' not in session:  # Check if user is logged in
@@ -607,6 +614,63 @@ def get_logistics():
         "total_pages": (total_items + per_page - 1) // per_page,  # Compute total pages
         "data": paginated_data
     }), 200
+
+@app.route('/api/get-logistics-summary', methods=['GET'])
+def get_logistics_summary():
+    logistics_ref = db.reference("logistics")
+    logistics_data = logistics_ref.get()
+
+    if not logistics_data:
+        return jsonify({"message": "No logistics data found"}), 404
+
+    logistics_list = list(logistics_data.values())
+
+    # Optional filtering by invoice_number, vendor_id, or po_id
+    invoice_id = request.args.get('invoice_id')
+    if invoice_id:
+        logistics_list = [
+            item for item in logistics_list 
+            if str(item['invoice']['invoice_number']) == invoice_id
+            or str(item['invoice']['vendor_id']) == invoice_id
+            or str(item['invoice']['po_id']) == invoice_id
+        ]
+
+    # Optional sorting
+    sort_order = request.args.get('sort', 'asc')
+    logistics_list.sort(key=lambda x: x['invoice']['invoice_id'], reverse=(sort_order == 'desc'))
+
+    # Filter to include invoices by their status (Paid, Overdue, Pending)
+    paid_amounts = [
+        item['invoice']['total_amount']
+        for item in logistics_list
+        if item['invoice']['status'] == "Paid"
+    ]
+
+    overdue_amounts = [
+        item['invoice']['total_amount']
+        for item in logistics_list
+        if item['invoice']['status'] == "Overdue"
+    ]
+
+    pending_amounts = [
+        item['invoice']['total_amount']
+        for item in logistics_list
+        if item['invoice']['status'] == "Pending"
+    ]
+
+    # Calculate the sums
+    total_paid = sum(paid_amounts)
+    total_overdue = sum(overdue_amounts)
+    total_pending = sum(pending_amounts)
+
+    return jsonify({
+        "total_paid_items": len(paid_amounts),
+        "paid_amounts": paid_amounts,
+        "total_paid": total_paid,
+        "total_overdue": total_overdue,
+        "total_pending": total_pending,
+    }), 200
+
 
 # api/get-logistics-reports?start_date=2024-01-01&end_date=2024-01-31
 @app.route('/api/get-logistics-reports', methods=['GET'])

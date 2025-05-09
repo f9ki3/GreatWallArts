@@ -9,11 +9,11 @@ firebase_admin.initialize_app(cred, {
 })
 
 # Load JSON data from file
-with open("static/json/general_ledger.json", "r") as file:
+with open("static/json/logistics.json", "r") as file:
     data = json.load(file)
 
 # Reference to "general_ledger" collection
-ledger_ref = db.reference("general_ledger")
+ledger_ref = db.reference("logistics")
 
 # Push each item to Firebase
 for item in data:
